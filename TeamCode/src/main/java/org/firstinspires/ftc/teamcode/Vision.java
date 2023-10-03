@@ -48,4 +48,3 @@ public class Vision extends LinearOpMode {
             }
         }
     }
-}
