@@ -18,9 +18,9 @@ public class MyOdometryOpmode extends LinearOpMode {
     DcMotor Right_Front, Left_Front, Right_Back, Left_Back;
     DcMotor Tracking_Right, Tracking_Left, Tracking_Middle;
     BNO055IMU imu;
-    String rfName = "rf", lfName = "lf", rbName = "rb", lbName = "lb";
-    String Tracking_RightEncoderName = rfName, Tracking_LeftEncoderName = lfName, Tracking_MiddleEncoderName = rbName;
-    final double PIVOT_SPEED = 5.0;
+    String Right_FrontName = "rf", Left_FrontName = "lf", Right_BackName = "rb", Left_BackName = "lb";
+    String Tracking_RightEncoderName = Right_FrontName, Tracking_LeftEncoderName = Left_FrontName, Tracking_MiddleEncoderName = Right_BackName;
+    final double PIVOT_SPEED = 0.8;
     final double COUNTS_PER_INCH = 537.7;
     ElapsedTime timer = new ElapsedTime();
     double Tracking_MiddleTickOffset = 0;
@@ -29,7 +29,7 @@ public class MyOdometryOpmode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        initHardwareMap(rfName, lfName, rbName, lbName, Tracking_RightEncoderName, Tracking_LeftEncoderName, Tracking_MiddleEncoderName);
+        initHardwareMap(Right_FrontName, Left_FrontName, Right_BackName, Left_BackName, Tracking_RightEncoderName, Tracking_LeftEncoderName, Tracking_MiddleEncoderName);
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
@@ -53,11 +53,11 @@ public class MyOdometryOpmode extends LinearOpMode {
             Right_Front.setPower(-PIVOT_SPEED);
             Right_Back.setPower(-PIVOT_SPEED);
             Left_Front.setPower(PIVOT_SPEED);
-            Left_Back.setPower(PIVOT_SPEED);
+            Left_Back.setPower(-PIVOT_SPEED);
             if (getZAngle() < 60) {
-                setPowerAll(-PIVOT_SPEED, -PIVOT_SPEED, PIVOT_SPEED, PIVOT_SPEED);
+                setPowerAll(-PIVOT_SPEED, -PIVOT_SPEED, PIVOT_SPEED, -PIVOT_SPEED);
             } else {
-                setPowerAll(-PIVOT_SPEED / 2, -PIVOT_SPEED / 2, PIVOT_SPEED / 2, PIVOT_SPEED / 2);
+                setPowerAll(-PIVOT_SPEED / 0/5, -PIVOT_SPEED / 0.5, PIVOT_SPEED / 0.5, -PIVOT_SPEED / 0.5);
             }
 
             telemetry.addData("IMU Angle", getZAngle());
@@ -65,12 +65,12 @@ public class MyOdometryOpmode extends LinearOpMode {
 
             setPowerAll(0, 0, 0, 0);
             timer.reset();
-            while (timer.milliseconds() < 1000 && opModeIsActive()) {
+            while (timer.milliseconds() < 5000 && opModeIsActive()) {
                 telemetry.addData("IMU Angle", getZAngle());
                 telemetry.update();
             }
             double angle = getZAngle();
-            double encoderDifference = Math.abs(Tracking_Left.getCurrentPosition()) + (Math.abs(Tracking_Right.getCurrentPosition()));
+            double encoderDifference = Math.abs(-Tracking_Left.getCurrentPosition()) + (Math.abs(Tracking_Right.getCurrentPosition()));
             double Middle_TrackingEncoderTickOffsetPerDegree = encoderDifference / angle;
             double wheelBaseSeparation = (2 * 90 * Middle_TrackingEncoderTickOffsetPerDegree) / (Math.PI * COUNTS_PER_INCH);
             Tracking_MiddleTickOffset = Tracking_Middle.getCurrentPosition() / Math.toRadians(getZAngle());
