@@ -70,7 +70,7 @@ public class MyOdometryOpmode extends LinearOpMode {
                 telemetry.update();
             }
             double angle = getZAngle();
-            double encoderDifference = Math.abs(-Tracking_Left.getCurrentPosition()) + (Math.abs(Tracking_Right.getCurrentPosition()));
+            double encoderDifference = Math.abs(Tracking_Left.getCurrentPosition()) + (Math.abs(Tracking_Right.getCurrentPosition()));
             double Middle_TrackingEncoderTickOffsetPerDegree = encoderDifference / angle;
             double wheelBaseSeparation = (2 * 90 * Middle_TrackingEncoderTickOffsetPerDegree) / (Math.PI * COUNTS_PER_INCH);
             Tracking_MiddleTickOffset = Tracking_Middle.getCurrentPosition() / Math.toRadians(getZAngle());
