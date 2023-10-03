@@ -26,7 +26,7 @@ public class Vision extends LinearOpMode {
             VisionPortal visionPortal = new VisionPortal.Builder()
                     .addProcessor(tagProcessor)
                     .setCamera(hardwareMap.get(WebcamName.class, "HD Pro Webcam C920"))
-                    .setCameraResolution(new Size(648, 488))
+                    .setCameraResolution(new Size(640, 360))
                     .build();
 
             waitForStart();
