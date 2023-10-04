@@ -9,6 +9,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 @TeleOp
 public class Vision extends LinearOpMode {
@@ -36,6 +38,8 @@ public class Vision extends LinearOpMode {
                 if (tagProcessor.getDetections().size() > 0) {
                     AprilTagDetection tag = tagProcessor.getDetections().get(0);
 
+                    FtcDashboard dashboard = FtcDashboard.getInstance();
+                    telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
                     telemetry.addData("x", tag.ftcPose.x);
                     telemetry.addData("y", tag.ftcPose.y);
                     telemetry.addData("z", tag.ftcPose.z);
