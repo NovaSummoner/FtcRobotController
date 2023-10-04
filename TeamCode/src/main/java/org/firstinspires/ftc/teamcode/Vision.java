@@ -26,7 +26,7 @@ public class Vision extends LinearOpMode {
             VisionPortal visionPortal = new VisionPortal.Builder()
                     .addProcessor(tagProcessor)
                     .setCamera(hardwareMap.get(WebcamName.class, "Camer1"))
-                    .setCameraResolution(new Size(640, 360))
+                    .setCameraResolution(new Size(1600, 896))
                     .build();
 
             waitForStart();
