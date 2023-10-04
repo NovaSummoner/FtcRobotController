@@ -16,20 +16,20 @@ import java.io.File;
 @Autonomous
 public class MyOdometryOpmode extends LinearOpMode {
     DcMotor Right_Front, Left_Front, Right_Back, Left_Back;
-    DcMotor Tracking_Right, Tracking_Left, Tracking_Middle;
+    DcMotor VerticalRight, VerticalLeft, Horizontal;
     BNO055IMU imu;
     String Right_FrontName = "rf", Left_FrontName = "lf", Right_BackName = "rb", Left_BackName = "lb";
-    String Tracking_RightEncoderName = Right_FrontName, Tracking_LeftEncoderName = Left_FrontName, Tracking_MiddleEncoderName = Right_BackName;
-    final double PIVOT_SPEED = 0.8;
+    String VerticalRightEncoderName = Right_BackName, VerticalLeftEncoderName = Left_FrontName, HorizontalEncoderName = Right_FrontName;
+    final double PIVOT_SPEED = 5;
     final double COUNTS_PER_INCH = 537.7;
     ElapsedTime timer = new ElapsedTime();
-    double Tracking_MiddleTickOffset = 0;
+    double HorizontalTickOffset = 0;
     File wheelBaseSeparationFile = AppUtil.getInstance().getSettingsFile("wheelBaseSeparation.txt");
-    File Tracking_MiddleTickOffsetFile = AppUtil.getInstance().getSettingsFile("Tracking_MiddleTickOffset.txt");
+    File Tracking_MiddleTickOffsetFile = AppUtil.getInstance().getSettingsFile("HorizontalTickOffset.txt");
 
     @Override
     public void runOpMode() throws InterruptedException {
-        initHardwareMap(Right_FrontName, Left_FrontName, Right_BackName, Left_BackName, Tracking_RightEncoderName, Tracking_LeftEncoderName, Tracking_MiddleEncoderName);
+        initHardwareMap(Right_FrontName, Left_FrontName, Right_BackName, Left_BackName, VerticalRightEncoderName, VerticalLeftEncoderName, HorizontalEncoderName);
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
@@ -57,7 +57,7 @@ public class MyOdometryOpmode extends LinearOpMode {
             if (getZAngle() < 60) {
                 setPowerAll(-PIVOT_SPEED, -PIVOT_SPEED, PIVOT_SPEED, -PIVOT_SPEED);
             } else {
-                setPowerAll(-PIVOT_SPEED / 0/5, -PIVOT_SPEED / 0.5, PIVOT_SPEED / 0.5, -PIVOT_SPEED / 0.5);
+                setPowerAll(-PIVOT_SPEED / 1, -PIVOT_SPEED / 1, PIVOT_SPEED / 1, -PIVOT_SPEED / 1);
             }
 
             telemetry.addData("IMU Angle", getZAngle());
@@ -65,28 +65,30 @@ public class MyOdometryOpmode extends LinearOpMode {
 
             setPowerAll(0, 0, 0, 0);
             timer.reset();
-            while (timer.milliseconds() < 5000 && opModeIsActive()) {
+            while (timer.milliseconds() < 1000 && opModeIsActive()) {
                 telemetry.addData("IMU Angle", getZAngle());
                 telemetry.update();
             }
             double angle = getZAngle();
-            double encoderDifference = Math.abs(Tracking_Left.getCurrentPosition()) + (Math.abs(Tracking_Right.getCurrentPosition()));
-            double Middle_TrackingEncoderTickOffsetPerDegree = encoderDifference / angle;
-            double wheelBaseSeparation = (2 * 90 * Middle_TrackingEncoderTickOffsetPerDegree) / (Math.PI * COUNTS_PER_INCH);
-            Tracking_MiddleTickOffset = Tracking_Middle.getCurrentPosition() / Math.toRadians(getZAngle());
+            double encoderDifference = Math.abs(VerticalLeft.getCurrentPosition()) + (Math.abs(VerticalRight.getCurrentPosition()));
+            double VerticalEncoderTickOffsetPerDegree = encoderDifference / angle;
+            double wheelBaseSeparation = (2 * 90 * VerticalEncoderTickOffsetPerDegree) / (Math.PI * COUNTS_PER_INCH);
+            double HorizontalTickOffsetPerDegree = Horizontal.getCurrentPosition() / Math.toRadians(getZAngle());
+            HorizontalTickOffset = HorizontalTickOffsetPerDegree;
+
 
             ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
-            ReadWriteFile.writeFile(Tracking_MiddleTickOffsetFile, String.valueOf(Tracking_MiddleTickOffset));
+            ReadWriteFile.writeFile(Tracking_MiddleTickOffsetFile, String.valueOf(HorizontalTickOffset));
 
             while (opModeIsActive()) {
                 telemetry.addData("Odometry System Calibration Status", "Calibration Complete");
                 telemetry.addData("Wheel Base Seperation", wheelBaseSeparation);
-                telemetry.addData("Tracking_Middle Encoder Offset", Tracking_MiddleTickOffset);
+                telemetry.addData("Horizontal Encoder Offset", HorizontalTickOffset);
 
                 telemetry.addData("IMU Angle", getZAngle());
-                telemetry.addData("Tracking Left Position", Tracking_Left.getCurrentPosition());
-                telemetry.addData("Tracking Right Position", Tracking_Right.getCurrentPosition());
-                telemetry.addData("Tracking Middle Position", Tracking_Middle.getCurrentPosition());
+                telemetry.addData("VerticalLeft Position", VerticalLeft.getCurrentPosition());
+                telemetry.addData("VerticalRight Position", VerticalRight.getCurrentPosition());
+                telemetry.addData("Horizontal Position", Horizontal.getCurrentPosition());
 
                 telemetry.update();
 
@@ -95,15 +97,15 @@ public class MyOdometryOpmode extends LinearOpMode {
 
     }
 
-    private void initHardwareMap(String rfName, String lfName, String rbName, String lbName, String trackingRightEncoderName, String trackingLeftEncoderName, String trackingMiddleEncoderName) {
+    private void initHardwareMap(String rfName, String lfName, String rbName, String lbName, String VerticalRightEncoderName, String VerticalLeftEncoderName, String HorizontalEncoderName) {
         Right_Front = hardwareMap.dcMotor.get(rfName);
         Right_Back = hardwareMap.dcMotor.get(rbName);
         Left_Front = hardwareMap.dcMotor.get(lfName);
         Left_Back = hardwareMap.dcMotor.get(lbName);
 
-        Tracking_Left = hardwareMap.dcMotor.get(trackingLeftEncoderName);
-        Tracking_Right = hardwareMap.dcMotor.get(trackingRightEncoderName);
-        Tracking_Middle = hardwareMap.dcMotor.get(trackingMiddleEncoderName);
+        VerticalLeft = hardwareMap.dcMotor.get(VerticalLeftEncoderName);
+        VerticalRight = hardwareMap.dcMotor.get(VerticalRightEncoderName);
+        Horizontal = hardwareMap.dcMotor.get(HorizontalEncoderName);
 
         Right_Front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Right_Back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -115,13 +117,13 @@ public class MyOdometryOpmode extends LinearOpMode {
         Left_Front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Left_Back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        Tracking_Left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Tracking_Right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Tracking_Middle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        VerticalLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        VerticalRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Horizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        Tracking_Left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Tracking_Right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Tracking_Middle.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        VerticalLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        VerticalRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Horizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         Right_Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
