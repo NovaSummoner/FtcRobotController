@@ -1,14 +1,15 @@
+package org.firstinspires.ftc.teamcode;
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-@TeleOp
+@Autonomous
 public class VisionAuto extends LinearOpMode {
 
     @Override
@@ -24,7 +25,7 @@ public class VisionAuto extends LinearOpMode {
         VisionPortal visionPortal = new VisionPortal.Builder()
                 .addProcessor(tagProcessor)
                 .setCamera(hardwareMap.get(WebcamName.class, "Camer1"))
-                .setCameraResolution(new Size(648, 488))
+                .setCameraResolution(new Size(2304, 1536))
                 .build();
 
         waitForStart();
