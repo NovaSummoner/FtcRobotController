@@ -24,8 +24,10 @@ public class MyOdometryOpmode extends LinearOpMode {
     final double COUNTS_PER_INCH = 537.7;
     ElapsedTime timer = new ElapsedTime();
     double HorizontalTickOffset = 0;
+
+
     File wheelBaseSeparationFile = AppUtil.getInstance().getSettingsFile("wheelBaseSeparation.txt");
-    File Tracking_MiddleTickOffsetFile = AppUtil.getInstance().getSettingsFile("HorizontalTickOffset.txt");
+    File HorizontalTickOffsetFile = AppUtil.getInstance().getSettingsFile("HorizontalTickOffset.txt");
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -43,7 +45,6 @@ public class MyOdometryOpmode extends LinearOpMode {
         imu.initialize(parameters);
         telemetry.addData("Odometry System Calibration Status", "IMU Init Complete");
         telemetry.clear();
-
         telemetry.addData("Odometry System Calibration Status", "Init Complete");
         telemetry.update();
 
@@ -78,7 +79,7 @@ public class MyOdometryOpmode extends LinearOpMode {
 
 
             ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
-            ReadWriteFile.writeFile(Tracking_MiddleTickOffsetFile, String.valueOf(HorizontalTickOffset));
+            ReadWriteFile.writeFile(HorizontalTickOffsetFile, String.valueOf(HorizontalTickOffset));
 
             while (opModeIsActive()) {
                 telemetry.addData("Odometry System Calibration Status", "Calibration Complete");
@@ -140,7 +141,7 @@ public class MyOdometryOpmode extends LinearOpMode {
         telemetry.update();
     }
 
-    private double getZAngle() {return (-imu.getAngularOrientation().firstAngle);}
+    private double getZAngle() {return (imu.getAngularOrientation().firstAngle);}
 
     private void setPowerAll(double rf, double rb, double lf, double lb) {
         Right_Front.setPower(rf);
