@@ -20,7 +20,7 @@ public class MyOdometryOpmode extends LinearOpMode {
     BNO055IMU imu;
     String Right_FrontName = "rf", Left_FrontName = "lf", Right_BackName = "rb", Left_BackName = "lb";
     String VerticalRightEncoderName = Right_BackName, VerticalLeftEncoderName = Left_FrontName, HorizontalEncoderName = Right_FrontName;
-    final double PIVOT_SPEED = 5;
+    final double PIVOT_SPEED = 1;
     final double COUNTS_PER_INCH = 537.7;
     ElapsedTime timer = new ElapsedTime();
     double HorizontalTickOffset = 0;
@@ -43,13 +43,13 @@ public class MyOdometryOpmode extends LinearOpMode {
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters);
-        telemetry.addData("Odometry System Calibration Status", "IMU Init Complete");
+        telemetry.update();telemetry.addData("Odometry System Calibration Status", "IMU Init Complete");
         telemetry.clear();
         telemetry.addData("Odometry System Calibration Status", "Init Complete");
         telemetry.update();
 
-        waitForStart();
 
+        waitForStart();
         while (getZAngle() < 90 && opModeIsActive()) {
             Right_Front.setPower(-PIVOT_SPEED);
             Right_Back.setPower(-PIVOT_SPEED);
@@ -58,7 +58,7 @@ public class MyOdometryOpmode extends LinearOpMode {
             if (getZAngle() < 60) {
                 setPowerAll(-PIVOT_SPEED, -PIVOT_SPEED, PIVOT_SPEED, -PIVOT_SPEED);
             } else {
-                setPowerAll(-PIVOT_SPEED / 1, -PIVOT_SPEED / 1, PIVOT_SPEED / 1, -PIVOT_SPEED / 1);
+                setPowerAll(-1, -1, 1, -1);
             }
 
             telemetry.addData("IMU Angle", getZAngle());
@@ -70,12 +70,12 @@ public class MyOdometryOpmode extends LinearOpMode {
                 telemetry.addData("IMU Angle", getZAngle());
                 telemetry.update();
             }
+
             double angle = getZAngle();
             double encoderDifference = Math.abs(VerticalLeft.getCurrentPosition()) + (Math.abs(VerticalRight.getCurrentPosition()));
             double VerticalEncoderTickOffsetPerDegree = encoderDifference / angle;
             double wheelBaseSeparation = (2 * 90 * VerticalEncoderTickOffsetPerDegree) / (Math.PI * COUNTS_PER_INCH);
-            double HorizontalTickOffsetPerDegree = Horizontal.getCurrentPosition() / Math.toRadians(getZAngle());
-            HorizontalTickOffset = HorizontalTickOffsetPerDegree;
+            HorizontalTickOffset = Horizontal.getCurrentPosition()/Math.toRadians(getZAngle());
 
 
             ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
@@ -141,7 +141,7 @@ public class MyOdometryOpmode extends LinearOpMode {
         telemetry.update();
     }
 
-    private double getZAngle() {return (imu.getAngularOrientation().firstAngle);}
+    private double getZAngle() {return (-imu.getAngularOrientation().firstAngle);}
 
     private void setPowerAll(double rf, double rb, double lf, double lb) {
         Right_Front.setPower(rf);

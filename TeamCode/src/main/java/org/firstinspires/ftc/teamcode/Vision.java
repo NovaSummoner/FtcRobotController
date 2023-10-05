@@ -40,6 +40,7 @@ public class Vision extends LinearOpMode {
 
                     FtcDashboard dashboard = FtcDashboard.getInstance();
                     telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+
                     telemetry.addData("x", tag.ftcPose.x);
                     telemetry.addData("y", tag.ftcPose.y);
                     telemetry.addData("z", tag.ftcPose.z);
