@@ -19,8 +19,8 @@ public class MyOdometryOpmode extends LinearOpMode {
     DcMotor right_front, right_back, left_front, left_back;
     DcMotor verticalLeft, verticalRight, horizontal;
     BNO055IMU imu;
-    String rfName = "rf", rbName = "rb", lfName = "lf", lbName = "lb";
-    String verticalLeftEncoderName = lfName, verticalRightEncoderName = rfName, horizontalEncoderName = rbName;
+    String right_frontName = "rf", right_backName = "rb", left_frontName = "lf", left_backName = "lb";
+    String verticalLeftEncoderName = left_frontName, verticalRightEncoderName = right_frontName, horizontalEncoderName = right_backName;
     final double PIVOT_SPEED = 1;
     final double COUNTS_PER_INCH = 537.7;
     ElapsedTime timer = new ElapsedTime();
@@ -30,7 +30,7 @@ public class MyOdometryOpmode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        initHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
+        initHardwareMap(right_frontName, right_backName, left_frontName, left_backName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
@@ -97,11 +97,11 @@ public class MyOdometryOpmode extends LinearOpMode {
         }
     }
 
-    private void initHardwareMap(String rfName, String rbName, String lfName, String lbName, String vlEncoderName, String vrEncoderName, String hEncoderName){
-        right_front = hardwareMap.dcMotor.get(rfName);
-        right_back = hardwareMap.dcMotor.get(rbName);
-        left_front = hardwareMap.dcMotor.get(lfName);
-        left_back = hardwareMap.dcMotor.get(lbName);
+    private void initHardwareMap(String right_frontName, String right_backName, String left_frontName, String left_backName, String vlEncoderName, String vrEncoderName, String hEncoderName){
+        right_front = hardwareMap.dcMotor.get(right_frontName);
+        right_back = hardwareMap.dcMotor.get(right_backName);
+        left_front = hardwareMap.dcMotor.get(left_frontName);
+        left_back = hardwareMap.dcMotor.get(left_backName);
 
         verticalLeft = hardwareMap.dcMotor.get(vlEncoderName);
         verticalRight = hardwareMap.dcMotor.get(vrEncoderName);

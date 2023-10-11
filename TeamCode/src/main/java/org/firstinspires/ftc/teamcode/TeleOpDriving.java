@@ -85,7 +85,7 @@ public class TeleOpDriving extends OpMode {
             front_left.setPower(0);
         }
 
-        //Intake Controller >:D
+        //Intake Controller & Motor >:D
 
         if (Math.abs(-gamepad2.left_stick_y) > .2) {
             inTakeMotor.setPower(gamepad2.left_stick_y * -1);
