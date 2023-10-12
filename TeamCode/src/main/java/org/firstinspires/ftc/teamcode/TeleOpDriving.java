@@ -36,8 +36,8 @@ public class TeleOpDriving extends OpMode {
     public void loop() {
         //Front back Left
         if (Math.abs(-gamepad1.left_stick_y) > .2) {
-            lf.setPower(-gamepad1.left_stick_y * 1);
-            lb.setPower(-gamepad1.left_stick_y * 1);
+            lf.setPower(gamepad1.left_stick_y * 1);
+            lb.setPower(gamepad1.left_stick_y * 1);
         } else {
             lf.setPower(0);
             lb.setPower(0);
@@ -79,7 +79,7 @@ public class TeleOpDriving extends OpMode {
 
         } else {
             rf.setPower(0);
-            lb.setPower(0);
+            rb.setPower(0);
             lb.setPower(0);
             lf.setPower(0);
         }
@@ -87,7 +87,7 @@ public class TeleOpDriving extends OpMode {
         //Intake Controller & Motor >:D
 
         if (Math.abs(-gamepad2.left_stick_y) > .2) {
-            inTakeMotor.setPower(gamepad2.left_stick_y * -.8);
+            inTakeMotor.setPower(gamepad2.left_stick_y * -1);
         } else {
             inTakeMotor.setPower(0);
 
