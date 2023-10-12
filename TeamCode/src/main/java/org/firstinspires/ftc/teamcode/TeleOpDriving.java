@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "TeleOpDriving")
 public class TeleOpDriving extends OpMode {
 
-
     DcMotor lf;
     DcMotor lb;
     DcMotor rf;
@@ -37,8 +36,8 @@ public class TeleOpDriving extends OpMode {
     public void loop() {
         //Front back Left
         if (Math.abs(-gamepad1.left_stick_y) > .2) {
-            lf.setPower(-gamepad1.left_stick_y * -.7);
-            lb.setPower(-gamepad1.left_stick_y * -.7);
+            lf.setPower(-gamepad1.left_stick_y * 1);
+            lb.setPower(-gamepad1.left_stick_y * 1);
         } else {
             lf.setPower(0);
             lb.setPower(0);
@@ -48,8 +47,8 @@ public class TeleOpDriving extends OpMode {
 
         //Front back Right
         if (Math.abs(-gamepad1.right_stick_y) > .2) {
-            rf.setPower(-gamepad1.right_stick_y * -.7);
-            rb.setPower(-gamepad1.right_stick_y * -.7);
+            rf.setPower(-gamepad1.right_stick_y * 1);
+            rb.setPower(-gamepad1.right_stick_y * 1);
         } else {
             rf.setPower(0);
             rb.setPower(0);
@@ -59,10 +58,10 @@ public class TeleOpDriving extends OpMode {
         }
         //Front back Right
         if (Math.abs(-gamepad1.left_stick_x) > .2) {
-            lf.setPower(-gamepad1.left_stick_x * -.7);
-            rb.setPower(-gamepad1.right_stick_x * -.7);
-            lb.setPower(-gamepad1.left_stick_x * -.7);
-            rf.setPower(-gamepad1.right_stick_x * -.7);
+            lf.setPower(-gamepad1.left_stick_x * 1);
+            rb.setPower(-gamepad1.right_stick_x * 1);
+            lb.setPower(-gamepad1.left_stick_x * 1);
+            rf.setPower(-gamepad1.right_stick_x * 1);
 
         } else {
             rf.setPower(0);
@@ -73,10 +72,10 @@ public class TeleOpDriving extends OpMode {
         }
         //Front back Left
         if (Math.abs(gamepad1.right_stick_x) > .2) {
-            lf.setPower(-gamepad1.left_stick_x * -.7);
-            rb.setPower(gamepad1.right_stick_x * -.7);
-            lb.setPower(gamepad1.left_stick_x * -.7);
-            rf.setPower(-gamepad1.right_stick_x * -.7);
+            lf.setPower(-gamepad1.left_stick_x * 1);
+            rb.setPower(gamepad1.right_stick_x * 1);
+            lb.setPower(gamepad1.left_stick_x * 1);
+            rf.setPower(-gamepad1.right_stick_x * 1);
 
         } else {
             rf.setPower(0);
