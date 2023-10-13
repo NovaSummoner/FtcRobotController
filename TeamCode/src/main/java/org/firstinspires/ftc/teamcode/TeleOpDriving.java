@@ -57,11 +57,11 @@ public class TeleOpDriving extends OpMode {
 
         }
         //Front back Right
-        if (Math.abs(-gamepad1.left_stick_x) > .2) {
-            lf.setPower(-gamepad1.left_stick_x * 1);
-            rb.setPower(-gamepad1.right_stick_x * 1);
-            lb.setPower(-gamepad1.left_stick_x * 1);
-            rf.setPower(-gamepad1.right_stick_x * 1);
+        if (Math.abs(-gamepad1.right_trigger) > .2) {
+            lf.setPower(gamepad1.left_trigger * 1);
+            rb.setPower(-gamepad1.left_trigger * 1);
+            lb.setPower(-gamepad1.left_trigger * 1);
+            rf.setPower(gamepad1.left_trigger * 1);
 
         } else {
             rf.setPower(0);
