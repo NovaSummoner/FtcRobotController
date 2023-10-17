@@ -9,26 +9,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "TeleOpDriving")
 public class TeleOpDriving extends OpMode {
 
-
-    DcMotor fl;
-    DcMotor bl;
-    DcMotor fr;
-    DcMotor br;
+    DcMotor lf;
+    DcMotor lb;
+    DcMotor rf;
+    DcMotor rb;
     DcMotor inTakeMotor;
 
 
     @Override
     public void init() {
 
-        fl = hardwareMap.dcMotor.get("fl");
-        bl = hardwareMap.dcMotor.get("bl");
-        fr = hardwareMap.dcMotor.get("fr");
-        br = hardwareMap.dcMotor.get("br");
+        lf = hardwareMap.dcMotor.get("lf");
+        lb = hardwareMap.dcMotor.get("lb");
+        rf = hardwareMap.dcMotor.get("rf");
+        rb = hardwareMap.dcMotor.get("rb");
         inTakeMotor = hardwareMap.dcMotor.get("inTakeMotor");
-        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         inTakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
@@ -37,52 +36,52 @@ public class TeleOpDriving extends OpMode {
     public void loop() {
         //Front back Left
         if (Math.abs(-gamepad1.left_stick_y) > .2) {
-            fl.setPower(-gamepad1.left_stick_y * -1);
-            bl.setPower(-gamepad1.left_stick_y * -1);
+            lf.setPower(gamepad1.left_stick_y * 1);
+            lb.setPower(gamepad1.left_stick_y * 1);
         } else {
-            fl.setPower(0);
-            bl.setPower(0);
-            fr.setPower(0);
-            br.setPower(0);
+            lf.setPower(0);
+            lb.setPower(0);
+            rf.setPower(0);
+            rb.setPower(0);
         }
 
         //Front back Right
         if (Math.abs(-gamepad1.right_stick_y) > .2) {
-            fr.setPower(-gamepad1.right_stick_y * -1);
-            br.setPower(-gamepad1.right_stick_y * -1);
+            rf.setPower(-gamepad1.right_stick_y * 1);
+            rb.setPower(-gamepad1.right_stick_y * 1);
         } else {
-            fr.setPower(0);
-            br.setPower(0);
-            fl.setPower(0);
-            bl.setPower(0);
+            rf.setPower(0);
+            rb.setPower(0);
+            lf.setPower(0);
+            lb.setPower(0);
 
         }
         //Front back Right
-        if (Math.abs(-gamepad1.left_stick_x) > .2) {
-            fl.setPower(-gamepad1.left_stick_x * -1);
-            br.setPower(-gamepad1.right_stick_x * -1);
-            bl.setPower(-gamepad1.left_stick_x * -1);
-            fr.setPower(-gamepad1.right_stick_x * -1);
+        if (Math.abs(-gamepad1.right_trigger) > .2) {
+            lf.setPower(gamepad1.left_trigger * 1);
+            rb.setPower(-gamepad1.left_trigger * 1);
+            lb.setPower(-gamepad1.left_trigger * 1);
+            rf.setPower(gamepad1.left_trigger * 1);
 
         } else {
-            fr.setPower(0);
-            bl.setPower(0);
-            br.setPower(0);
-            fl.setPower(0);
+            rf.setPower(0);
+            lb.setPower(0);
+            rb.setPower(0);
+            lf.setPower(0);
 
         }
         //Front back Left
-        if (Math.abs(gamepad1.right_stick_x) > .2) {
-            fl.setPower(-gamepad1.left_stick_x * -1);
-            br.setPower(gamepad1.right_stick_x * -1);
-            bl.setPower(gamepad1.left_stick_x * -1);
-            fr.setPower(-gamepad1.right_stick_x * -1);
+        if (Math.abs(gamepad1.left_trigger) > .2) {
+            lf.setPower(-gamepad1.left_trigger * 1);
+            rb.setPower(gamepad1.left_trigger * 1);
+            lb.setPower(gamepad1.left_trigger * 1);
+            rf.setPower(-gamepad1.left_trigger * 1);
 
         } else {
-            fr.setPower(0);
-            bl.setPower(0);
-            bl.setPower(0);
-            fl.setPower(0);
+            rf.setPower(0);
+            rb.setPower(0);
+            lb.setPower(0);
+            lf.setPower(0);
         }
 
         //Intake Controller & Motor >:D
@@ -93,7 +92,7 @@ public class TeleOpDriving extends OpMode {
             inTakeMotor.setPower(0);
 
         }
-
     }
 }
 
+//hamburger
