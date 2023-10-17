@@ -92,7 +92,6 @@ public class TeleOpDriving extends OpMode {
             inTakeMotor.setPower(0);
 
         }
-
     }
 }
 

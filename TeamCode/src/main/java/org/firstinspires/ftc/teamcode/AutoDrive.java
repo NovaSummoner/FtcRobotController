@@ -24,7 +24,7 @@ public class AutoDrive extends LinearOpMode {
             lb.setPower(-0.5);
             rf.setPower(0.5);
             rb.setPower(0.5);
-            sleep(10000);
+            sleep(5000);
         }
     }
 }
