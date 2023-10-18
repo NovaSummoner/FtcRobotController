@@ -36,8 +36,8 @@ public class TeleOpDriving extends OpMode {
     public void loop() {
         //Front back Left
         if (Math.abs(-gamepad1.left_stick_y) > .2) {
-            lf.setPower(gamepad1.left_stick_y * 1);
-            lb.setPower(gamepad1.left_stick_y * 1);
+            lf.setPower(gamepad1.left_stick_y * 0.8);
+            lb.setPower(gamepad1.left_stick_y * 0.8);
         } else {
             lf.setPower(0);
             lb.setPower(0);
@@ -47,8 +47,8 @@ public class TeleOpDriving extends OpMode {
 
         //Front back Right
         if (Math.abs(-gamepad1.right_stick_y) > .2) {
-            rf.setPower(-gamepad1.right_stick_y * 1);
-            rb.setPower(-gamepad1.right_stick_y * 1);
+            rf.setPower(-gamepad1.right_stick_y * 0.8);
+            rb.setPower(-gamepad1.right_stick_y * 0.8);
         } else {
             rf.setPower(0);
             rb.setPower(0);
@@ -56,12 +56,12 @@ public class TeleOpDriving extends OpMode {
             lb.setPower(0);
 
         }
-        //Front back Right
+        //Strafe Right
         if (Math.abs(-gamepad1.right_trigger) > .2) {
-            lf.setPower(gamepad1.left_trigger * 1);
-            rb.setPower(-gamepad1.left_trigger * 1);
-            lb.setPower(-gamepad1.left_trigger * 1);
-            rf.setPower(gamepad1.left_trigger * 1);
+            lf.setPower(gamepad1.left_trigger * 0.8);
+            rb.setPower(-gamepad1.left_trigger * 0.8);
+            lb.setPower(-gamepad1.left_trigger * 0.8);
+            rf.setPower(gamepad1.left_trigger * 0.8);
 
         } else {
             rf.setPower(0);
@@ -70,12 +70,12 @@ public class TeleOpDriving extends OpMode {
             lf.setPower(0);
 
         }
-        //Front back Left
+        //Strafe Left
         if (Math.abs(gamepad1.left_trigger) > .2) {
-            lf.setPower(-gamepad1.left_trigger * 1);
-            rb.setPower(gamepad1.left_trigger * 1);
-            lb.setPower(gamepad1.left_trigger * 1);
-            rf.setPower(-gamepad1.left_trigger * 1);
+            lf.setPower(-gamepad1.left_trigger * 0.8);
+            rb.setPower(gamepad1.left_trigger * 0.8);
+            lb.setPower(gamepad1.left_trigger * 0.8);
+            rf.setPower(-gamepad1.left_trigger * 0.8);
 
         } else {
             rf.setPower(0);
