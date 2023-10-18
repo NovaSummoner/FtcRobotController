@@ -59,12 +59,15 @@ public class EasyOpenCv extends OpenCvPipeline {
 
         if (coneLeft && coneRight) {
             location = Location.NOT_FOUND;
+            telemetry.addData("Cone Location", "not found");
         }
         if (coneLeft) {
             location = Location.RIGHT;
+            telemetry.addData("Cone Location", "right");
         }
         else {
             location = Location.LEFT;
+            telemetry.addData("Cone Location", "left");
         }
         telemetry.update();
 
@@ -73,6 +76,13 @@ public class EasyOpenCv extends OpenCvPipeline {
         Scalar redCone = new Scalar(244, 67, 54);
         Scalar blueCone = new Scalar(40, 53, 147);
 
-        Imgproc.rectangle(mat, RIGHT_ROI, Location == Location.);
+        Imgproc.rectangle(mat, LEFT_ROI, location == location.LEFT? blueCone:redCone);
+        Imgproc.rectangle(mat, RIGHT_ROI, location == location.RIGHT? blueCone:redCone);
+
+        return mat;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 }
