@@ -17,9 +17,20 @@ public class EasyOpenCvAuto extends LinearOpMode {
         webCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         EasyOpenCv detector = new EasyOpenCv(telemetry);
         webCam.setPipeline(detector);
-        webCam.openCameraDeviceAsync(
-            () -> webCam.startStreaming(2304, 1536, OpenCvCameraRotation.UPRIGHT)
-        );
+        webCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webCam.startStreaming(2304,1536, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+
+        telemetry.addLine("Waiting for start");
+        telemetry.update();
 
         waitForStart();
         switch (detector.getLocation()) {
