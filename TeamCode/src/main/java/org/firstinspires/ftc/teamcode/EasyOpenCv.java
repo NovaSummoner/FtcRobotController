@@ -22,12 +22,12 @@ public class EasyOpenCv extends OpenCvPipeline {
     private Location location;
 
     static final Rect RIGHT_ROI = new Rect(
-            new Point(),
-            new Point()
+            new Point(60,35),
+            new Point(120,75)
     );
     static final Rect LEFT_ROI = new Rect(
-            new Point(),
-            new Point()
+            new Point(140,35),
+            new Point(200,75)
     );
     static double PERCENT_COLOR_THRESHOLD = 0.4;
     public EasyOpenCv(Telemetry t) { telemetry = t; }
