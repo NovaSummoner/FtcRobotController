@@ -10,17 +10,17 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name = "EasyOpenCvDetector", group="Auto")
 public class EasyOpenCvAuto extends LinearOpMode {
-    OpenCvCamera webCam;
+    OpenCvCamera camera1;
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        camera1 = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         EasyOpenCv detector = new EasyOpenCv(telemetry);
-        webCam.setPipeline(detector);
-        webCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+        camera1.setPipeline(detector);
+        camera1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webCam.startStreaming(2304,1536, OpenCvCameraRotation.UPRIGHT);
+                camera1.startStreaming(1080,1080 , OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -35,14 +35,11 @@ public class EasyOpenCvAuto extends LinearOpMode {
         waitForStart();
         switch (detector.getLocation()) {
             case LEFT:
-                // ...
                 break;
             case RIGHT:
-                // ...
                 break;
             case NOT_FOUND:
-                // ...
         }
-        webCam.stopStreaming();
+        camera1.stopStreaming();
     }
 }
