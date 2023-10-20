@@ -34,16 +34,6 @@ public class TeleOpDriving extends OpMode {
 
     @Override
     public void loop() {
-        //Front back Left
-        if (Math.abs(-gamepad1.left_stick_y) > .2) {
-            lf.setPower(gamepad1.left_stick_y * 0.8);
-            lb.setPower(gamepad1.left_stick_y * 0.8);
-        } else {
-            lf.setPower(0);
-            lb.setPower(0);
-            rf.setPower(0);
-            rb.setPower(0);
-        }
 
         //Front back Right
         if (Math.abs(-gamepad1.right_stick_y) > .2) {
@@ -54,6 +44,17 @@ public class TeleOpDriving extends OpMode {
             rb.setPower(0);
             lf.setPower(0);
             lb.setPower(0);
+
+            //Front back Left
+        if (Math.abs(-gamepad1.left_stick_y) > .2) {
+            lf.setPower(gamepad1.left_stick_y * 0.8);
+            lb.setPower(gamepad1.left_stick_y * 0.8);
+        } else {
+            lf.setPower(0);
+            lb.setPower(0);
+            rf.setPower(0);
+            rb.setPower(0);
+        }
 
         }
         //Strafe Right
