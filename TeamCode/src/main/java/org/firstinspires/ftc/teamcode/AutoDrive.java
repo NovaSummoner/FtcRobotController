@@ -20,11 +20,11 @@ public class AutoDrive extends LinearOpMode {
             rf=hardwareMap.dcMotor.get("rf");
             rb=hardwareMap.dcMotor.get("rb");
             waitForStart();
-            lf.setPower(-0.4);
-            lb.setPower(-0.4);
-            rf.setPower(0.4);
-            rb.setPower(0.4);
-            sleep(3000);
+            lf.setPower(-0.35);
+            lb.setPower(-0.35);
+            rf.setPower(0.35);
+            rb.setPower(0.35);
+            sleep(1500);
         }
     }
 }
