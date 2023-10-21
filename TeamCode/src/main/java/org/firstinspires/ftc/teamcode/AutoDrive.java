@@ -12,6 +12,7 @@ public class AutoDrive extends LinearOpMode {
     DcMotor rf;
     DcMotor rb;
 
+    DcMotor inTakeMotor;
     @Override
     public void runOpMode() throws InterruptedException {
         {
@@ -24,7 +25,8 @@ public class AutoDrive extends LinearOpMode {
             lb.setPower(-0.5);
             rf.setPower(0.5);
             rb.setPower(0.5);
-            sleep(5000);
+            inTakeMotor.setPower(-1);
+            sleep(4000);
         }
     }
 }
