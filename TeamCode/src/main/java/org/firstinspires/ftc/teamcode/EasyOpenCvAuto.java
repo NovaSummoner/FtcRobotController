@@ -20,7 +20,7 @@ public class EasyOpenCvAuto extends LinearOpMode {
         camera1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera1.startStreaming(1080,1080 , OpenCvCameraRotation.UPRIGHT);
+                camera1.startStreaming(1920,1080 , OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override

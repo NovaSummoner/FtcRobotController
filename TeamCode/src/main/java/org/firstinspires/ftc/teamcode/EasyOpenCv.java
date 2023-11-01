@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.location.Location;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
