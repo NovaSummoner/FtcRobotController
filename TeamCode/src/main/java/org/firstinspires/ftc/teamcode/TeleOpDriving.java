@@ -40,60 +40,57 @@ public class TeleOpDriving extends OpMode {
             rf.setPower(-gamepad1.right_stick_y * 0.8);
             rb.setPower(-gamepad1.right_stick_y * 0.8);
         } else {
-            rf.setPower(0);
             rb.setPower(0);
-            lf.setPower(0);
-            lb.setPower(0);
+            rf.setPower(0);
+        }
 
-            //Front back Left
         if (Math.abs(-gamepad1.left_stick_y) > .2) {
             lf.setPower(gamepad1.left_stick_y * 0.8);
             lb.setPower(gamepad1.left_stick_y * 0.8);
         } else {
             lf.setPower(0);
             lb.setPower(0);
-            rf.setPower(0);
-            rb.setPower(0);
+
+
+            //Strafe Right
+            if (Math.abs(-gamepad1.right_trigger) > .2) {
+                lf.setPower(-gamepad1.right_trigger * 0.8);
+                rb.setPower(gamepad1.right_trigger * 0.8);
+                lb.setPower(gamepad1.right_trigger * 0.8);
+                rf.setPower(-gamepad1.right_trigger * 0.8);
+
+            } else {
+                rf.setPower(0);
+                lb.setPower(0);
+                rb.setPower(0);
+                lf.setPower(0);
+
+            }
+            //Strafe Left
+            if (Math.abs(gamepad1.left_trigger) > .2) {
+                lf.setPower(gamepad1.left_trigger * 0.8);
+                rb.setPower(-gamepad1.left_trigger * 0.8);
+                lb.setPower(-gamepad1.left_trigger * 0.8);
+                rf.setPower(gamepad1.left_trigger * 0.8);
+
+            } else {
+                rf.setPower(0);
+                rb.setPower(0);
+                lb.setPower(0);
+                lf.setPower(0);
+            }
+
+            //Intake Controller & Motor >:D
+
+            if (Math.abs(-gamepad2.left_stick_y) > .2) {
+                inTakeMotor.setPower(gamepad2.left_stick_y * -0.8);
+            } else {
+                inTakeMotor.setPower(0);
+
+            }
         }
+    }}
 
-        }
-        //Strafe Right
-        if (Math.abs(-gamepad1.right_trigger) > .2) {
-            lf.setPower(gamepad1.left_trigger * 0.8);
-            rb.setPower(-gamepad1.left_trigger * 0.8);
-            lb.setPower(-gamepad1.left_trigger * 0.8);
-            rf.setPower(gamepad1.left_trigger * 0.8);
 
-        } else {
-            rf.setPower(0);
-            lb.setPower(0);
-            rb.setPower(0);
-            lf.setPower(0);
-
-        }
-        //Strafe Left
-        if (Math.abs(gamepad1.left_trigger) > .2) {
-            lf.setPower(-gamepad1.left_trigger * 0.8);
-            rb.setPower(gamepad1.left_trigger * 0.8);
-            lb.setPower(gamepad1.left_trigger * 0.8);
-            rf.setPower(-gamepad1.left_trigger * 0.8);
-
-        } else {
-            rf.setPower(0);
-            rb.setPower(0);
-            lb.setPower(0);
-            lf.setPower(0);
-        }
-
-        //Intake Controller & Motor >:D
-
-        if (Math.abs(-gamepad2.left_stick_y) > .2) {
-            inTakeMotor.setPower(gamepad2.left_stick_y * -1);
-        } else {
-            inTakeMotor.setPower(0);
-
-        }
-    }
-}
 
 //hamburger

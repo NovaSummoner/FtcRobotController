@@ -154,7 +154,3 @@ public class MyOdometryOpmode extends LinearOpMode {
         left_back.setPower(lb);
     }
 }
-
-
-
-
