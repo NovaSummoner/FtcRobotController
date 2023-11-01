@@ -7,18 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Auto {
-}
-package org.firstinspires.ftc.teamcode.Auto;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-
 @Autonomous(name="Auto", group="Robot")
 
 public class Auto extends LinearOpMode {
@@ -238,6 +226,6 @@ public class Auto extends LinearOpMode {
         }
     }
 
-    private boolean opModeIsActive() {
-    }
+    //private boolean opModeIsActive() {
+      //}
 }

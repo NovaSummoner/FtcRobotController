@@ -23,14 +23,18 @@ public class EasyOpenCvAuto extends LinearOpMode {
                 camera1.startStreaming(1080,1080 , OpenCvCameraRotation.UPRIGHT);
             }
 
+
             @Override
             public void onError(int errorCode) {
+
 
             }
         });
 
+
         telemetry.addLine("Waiting for start");
         telemetry.update();
+
 
         waitForStart();
         switch (detector.getLocation()) {
@@ -43,3 +47,4 @@ public class EasyOpenCvAuto extends LinearOpMode {
         camera1.stopStreaming();
     }
 }
+
