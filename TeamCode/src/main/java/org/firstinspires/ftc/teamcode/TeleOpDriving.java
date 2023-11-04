@@ -15,7 +15,7 @@ public class TeleOpDriving extends OpMode {
     DcMotor rf;
     DcMotor rb;
     DcMotor inTakeMotor;
-    Servo inTakeServo;
+    Servo droneServo;
     DcMotor hangingMotor;
 
     @Override
@@ -27,14 +27,13 @@ public class TeleOpDriving extends OpMode {
         rb = hardwareMap.dcMotor.get("rb");
         inTakeMotor = hardwareMap.dcMotor.get("inTakeMotor");
         hangingMotor = hardwareMap.dcMotor.get("hangingMotor");
-        inTakeServo = hardwareMap.servo.get("inTakeServo");
+        droneServo = hardwareMap.servo.get("inTakeServo");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         inTakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         hangingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        inTakeServo.setDirection(Servo.Direction.FORWARD);
     }
 
     @Override
@@ -93,29 +92,23 @@ public class TeleOpDriving extends OpMode {
                 inTakeMotor.setPower(0);
             }
 
-            if (gamepad2.a) {
-                inTakeServo.setPosition(1);
+            if (gamepad2.left_bumper) {
+                droneServo.setPosition(1);
             } else {
-                inTakeServo.setPosition(0);
-            }
-
-            if (gamepad2.b) {
-                inTakeServo.setPosition(1);
-            } else {
-                inTakeServo.setPosition(0);
+                droneServo.setPosition(0);
             }
             //Hanging Mechanisms
 
             if (gamepad2.dpad_up) {
                 hangingMotor.setPower(1);
             } else {
-                hangingMotor.setPower(1);
+                hangingMotor.setPower(0);
             }
 
             if (gamepad2.dpad_down) {
                 inTakeMotor.setPower(-1);
             } else {
-                hangingMotor.setPower(1);
+                hangingMotor.setPower(0);
             }
 
         }
