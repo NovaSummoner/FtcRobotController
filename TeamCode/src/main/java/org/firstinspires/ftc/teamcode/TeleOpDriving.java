@@ -14,8 +14,7 @@ public class TeleOpDriving extends OpMode {
     DcMotor rf;
     DcMotor rb;
     DcMotor inTakeMotor;
-
-
+    DcMotor HangingMotor;
     @Override
     public void init() {
 
@@ -24,11 +23,13 @@ public class TeleOpDriving extends OpMode {
         rf = hardwareMap.dcMotor.get("rf");
         rb = hardwareMap.dcMotor.get("rb");
         inTakeMotor = hardwareMap.dcMotor.get("inTakeMotor");
+        HangingMotor = hardwareMap.dcMotor.get("HangingMotor");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         inTakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        HangingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
 
@@ -87,6 +88,11 @@ public class TeleOpDriving extends OpMode {
             } else {
                 inTakeMotor.setPower(0);
 
+                if (Math.abs(-gamepad2.right_trigger) > .2) {
+                    HangingMotor.setPower(gamepad2.right_trigger * -0.8);
+                } else {
+                    HangingMotor.setPower(0);
+                }
             }
         }
     }}
