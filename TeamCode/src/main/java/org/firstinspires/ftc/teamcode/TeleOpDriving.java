@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "TeleOpDriving")
@@ -15,9 +14,7 @@ public class TeleOpDriving extends OpMode {
     DcMotor rf;
     DcMotor rb;
     DcMotor inTakeMotor;
-    Servo droneServo;
-    DcMotor hangingMotor;
-
+    DcMotor HangingMotor;
     @Override
     public void init() {
 
@@ -26,14 +23,14 @@ public class TeleOpDriving extends OpMode {
         rf = hardwareMap.dcMotor.get("rf");
         rb = hardwareMap.dcMotor.get("rb");
         inTakeMotor = hardwareMap.dcMotor.get("inTakeMotor");
-        hangingMotor = hardwareMap.dcMotor.get("hangingMotor");
-        droneServo = hardwareMap.servo.get("inTakeServo");
+        HangingMotor = hardwareMap.dcMotor.get("HangingMotor");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         inTakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        hangingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        HangingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
     }
 
     @Override
@@ -41,16 +38,16 @@ public class TeleOpDriving extends OpMode {
 
         //Front back Right
         if (Math.abs(-gamepad1.right_stick_y) > .2) {
-            rf.setPower(-gamepad1.right_stick_y * 0.8);
-            rb.setPower(-gamepad1.right_stick_y * 0.8);
+            rf.setPower(-gamepad1.right_stick_y * 1);
+            rb.setPower(-gamepad1.right_stick_y * 1);
         } else {
             rb.setPower(0);
             rf.setPower(0);
         }
 
         if (Math.abs(-gamepad1.left_stick_y) > .2) {
-            lf.setPower(gamepad1.left_stick_y * 0.8);
-            lb.setPower(gamepad1.left_stick_y * 0.8);
+            lf.setPower(gamepad1.left_stick_y * 1);
+            lb.setPower(gamepad1.left_stick_y * 1);
         } else {
             lf.setPower(0);
             lb.setPower(0);
@@ -58,10 +55,10 @@ public class TeleOpDriving extends OpMode {
 
             //Strafe Right
             if (Math.abs(-gamepad1.right_trigger) > .2) {
-                lf.setPower(-gamepad1.right_trigger * 0.8);
-                rb.setPower(gamepad1.right_trigger * 0.8);
-                lb.setPower(gamepad1.right_trigger * 0.8);
-                rf.setPower(-gamepad1.right_trigger * 0.8);
+                lf.setPower(-gamepad1.right_trigger * 1);
+                rb.setPower(gamepad1.right_trigger * 1);
+                lb.setPower(gamepad1.right_trigger * 1);
+                rf.setPower(-gamepad1.right_trigger * 1);
 
             } else {
                 rf.setPower(0);
@@ -72,10 +69,10 @@ public class TeleOpDriving extends OpMode {
             }
             //Strafe Left
             if (Math.abs(gamepad1.left_trigger) > .2) {
-                lf.setPower(gamepad1.left_trigger * 0.8);
-                rb.setPower(-gamepad1.left_trigger * 0.8);
-                lb.setPower(-gamepad1.left_trigger * 0.8);
-                rf.setPower(gamepad1.left_trigger * 0.8);
+                lf.setPower(gamepad1.left_trigger * 1);
+                rb.setPower(-gamepad1.left_trigger * 1);
+                lb.setPower(-gamepad1.left_trigger * 1);
+                rf.setPower(gamepad1.left_trigger * 1);
 
             } else {
                 rf.setPower(0);
@@ -90,27 +87,19 @@ public class TeleOpDriving extends OpMode {
                 inTakeMotor.setPower(gamepad2.left_stick_y * -0.8);
             } else {
                 inTakeMotor.setPower(0);
-            }
 
-            if (gamepad2.left_bumper) {
-                droneServo.setPosition(1);
-            } else {
-                droneServo.setPosition(0);
-            }
-            //Hanging Mechanisms
+                if (Math.abs(-gamepad2.right_trigger) > .2) {
+                    HangingMotor.setPower(gamepad2.right_trigger * -0.8);
+                } else {
+                    HangingMotor.setPower(0);
 
-            if (gamepad2.dpad_up) {
-                hangingMotor.setPower(1);
-            } else {
-                hangingMotor.setPower(0);
+                    if (Math.abs(-gamepad2.left_trigger) > .2) {
+                        HangingMotor.setPower(gamepad2.left_trigger * 0.8);
+                    } else {
+                        HangingMotor.setPower(0);
+                    }
+                }
             }
-
-            if (gamepad2.dpad_down) {
-                inTakeMotor.setPower(-1);
-            } else {
-                hangingMotor.setPower(0);
-            }
-
         }
     }}
 
