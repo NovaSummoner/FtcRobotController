@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "TeleOpDriving")
@@ -15,6 +16,7 @@ public class TeleOpDriving extends OpMode {
     DcMotor rb;
     DcMotor inTakeMotor;
     DcMotor HangingMotor;
+    Servo droneServo;
     @Override
     public void init() {
 
@@ -24,6 +26,7 @@ public class TeleOpDriving extends OpMode {
         rb = hardwareMap.dcMotor.get("rb");
         inTakeMotor = hardwareMap.dcMotor.get("inTakeMotor");
         HangingMotor = hardwareMap.dcMotor.get("HangingMotor");
+        droneServo = hardwareMap.servo.get("droneServo")
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -79,6 +82,13 @@ public class TeleOpDriving extends OpMode {
                 rb.setPower(0);
                 lb.setPower(0);
                 lf.setPower(0);
+            }
+
+            //Drone launcher
+            if (gamepad2.right_bumper) {
+                droneServo.setPosition(1);
+            } else {
+                droneServo.setPosition(0);
             }
 
             //Intake Controller & Motor >:D
