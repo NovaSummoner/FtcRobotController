@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.location.Location;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -10,15 +9,17 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class EasyOpenCv extends OpenCvPipeline {
+public class BlueEasyOpenCv extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
+
     public enum Location {
         LEFT,
         RIGHT,
         NOT_FOUND
     }
     private Location location;
+
 
     static final Rect RIGHT_ROI = new Rect(
             new Point(60,35),
@@ -29,15 +30,17 @@ public class EasyOpenCv extends OpenCvPipeline {
             new Point(200,75)
     );
     static double PERCENT_COLOR_THRESHOLD = 0.4;
-    public EasyOpenCv(Telemetry t) { telemetry = t; }
+    public BlueEasyOpenCv(Telemetry t) { telemetry = t; }
+
 
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(217, 92, 38);
-        Scalar highHSV = new Scalar(217, 56, 74);
+        Scalar lowHSV = new Scalar(26, 35, 255);
+        Scalar highHSV = new Scalar(0, 141, 255);
 
         Core.inRange(mat, lowHSV, highHSV, mat);
+
 
         Mat left = mat.submat(LEFT_ROI);
         Mat right = mat.submat(RIGHT_ROI);
@@ -60,7 +63,7 @@ public class EasyOpenCv extends OpenCvPipeline {
             location = Location.NOT_FOUND;
             telemetry.addData("Cone Location", "not found");
         }
-        if (coneLeft) {
+        else if (coneLeft) {
             location = Location.RIGHT;
             telemetry.addData("Cone Location", "right");
         }
@@ -68,20 +71,24 @@ public class EasyOpenCv extends OpenCvPipeline {
             location = Location.LEFT;
             telemetry.addData("Cone Location", "left");
         }
+
         telemetry.update();
+
 
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
-        Scalar redCone = new Scalar(244, 67, 54);
-        Scalar blueCone = new Scalar(40, 53, 147);
 
-        Imgproc.rectangle(mat, LEFT_ROI, location == location.LEFT? blueCone:redCone);
-        Imgproc.rectangle(mat, RIGHT_ROI, location == location.RIGHT? blueCone:redCone);
+        Scalar coneDetector1  = new Scalar(59, 49, 235);
+        Scalar coneDetector2 = new Scalar(59, 49, 235);
+
+
+        Imgproc.rectangle(mat, LEFT_ROI, location == location.LEFT? coneDetector2:coneDetector1);
+        Imgproc.rectangle(mat, RIGHT_ROI, location == location.RIGHT? coneDetector2:coneDetector1);
+
 
         return mat;
     }
 
-    public Location getLocation() {
-        return location;
-    }
+
+    public Location getLocation() {return location;}
 }
