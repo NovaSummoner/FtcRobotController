@@ -36,10 +36,10 @@ public class BlueEasyOpenCv extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(26, 35, 255);
-        Scalar highHSV = new Scalar(0, 141, 255);
+        Scalar scalarLowerYCrCb = new Scalar(0, 200, 0);
+        Scalar scalarHigherYCrCb = new Scalar(100, 200, 70);
 
-        Core.inRange(mat, lowHSV, highHSV, mat);
+        Core.inRange(mat, scalarLowerYCrCb, scalarHigherYCrCb, mat);
 
 
         Mat left = mat.submat(LEFT_ROI);

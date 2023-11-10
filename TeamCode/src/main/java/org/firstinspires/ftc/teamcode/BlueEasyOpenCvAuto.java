@@ -35,16 +35,5 @@ public class BlueEasyOpenCvAuto extends LinearOpMode {
 
         waitForStart();
 
-        switch(detector.getLocation()) {
-            case LEFT:
-                // ...
-                break;
-            case RIGHT:
-                // ...
-                break;
-            case NOT_FOUND:
-                // ...
         }
-        camera.stopStreaming();
     }
-}
