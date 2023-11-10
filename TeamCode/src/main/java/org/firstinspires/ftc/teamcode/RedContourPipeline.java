@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContourPipeline extends OpenCvPipeline {
+public class RedContourPipeline extends OpenCvPipeline {
     Scalar Titan_Red = new Scalar (196, 23, 112);
     public static Scalar scalarLowerYCrCb = new Scalar(0.0, 170.0, 0.0);
     public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 128.0);
@@ -38,10 +38,10 @@ public class ContourPipeline extends OpenCvPipeline {
     private boolean first = false;
     private final Object sync = new Object();
     private Telemetry telemetry;
-    public ContourPipeline(Telemetry telemetry) {
+    public RedContourPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
-    public ContourPipeline(double borderLeftX, double borderRightX, double borderTopY, double borderBottomY) {
+    public RedContourPipeline(double borderLeftX, double borderRightX, double borderTopY, double borderBottomY) {
         this.borderLeftX = borderLeftX;
         this.borderRightX = borderRightX;
         this.borderTopY = borderTopY;
