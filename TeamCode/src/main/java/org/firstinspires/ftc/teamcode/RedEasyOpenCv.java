@@ -26,7 +26,7 @@ public class RedEasyOpenCv extends LinearOpMode {
 
     static final double WEBCAM_WIDTH = 640;
     private OpenCvCamera webcam;
-    private ContourPipeline pipeline;
+    private RedContourPipeline pipeline;
 
     private int minRectangleArea = 2000;
     private double leftBarcodeRangeBoundary = 0.3;
@@ -45,7 +45,7 @@ public class RedEasyOpenCv extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "camera"), cameraMonitorViewId);
 
-        pipeline = new ContourPipeline(0.0, 0.0, 0.0, 0.0);
+        pipeline = new RedContourPipeline(0.0, 0.0, 0.0, 0.0);
 
         pipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
         pipeline.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
