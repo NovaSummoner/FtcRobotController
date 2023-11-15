@@ -26,7 +26,7 @@ public class TeleOpDriving extends OpMode {
         rb = hardwareMap.dcMotor.get("rb");
         inTakeMotor = hardwareMap.dcMotor.get("inTakeMotor");
         HangingMotor = hardwareMap.dcMotor.get("HangingMotor");
-        droneServo = hardwareMap.servo.get("droneServo")
+        droneServo = hardwareMap.servo.get("droneServo");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
