@@ -10,7 +10,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Scalar;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
 public class RedEasyOpenCv extends LinearOpMode {
@@ -24,7 +23,6 @@ public class RedEasyOpenCv extends LinearOpMode {
     static final double DRIVE_SPEED = 0.2;
     static final double TURN_SPEED = 0.5;
 
-    static final double WEBCAM_WIDTH = 640;
     private OpenCvCamera webcam;
     private RedContourPipeline pipeline;
 
@@ -43,205 +41,21 @@ public class RedEasyOpenCv extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "camera"), cameraMonitorViewId);
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         pipeline = new RedContourPipeline(0.0, 0.0, 0.0, 0.0);
 
         pipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
         pipeline.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
 
-        lf = hardwareMap.dcMotor.get("lf");
-        rf = hardwareMap.dcMotor.get("rf");
-        lb = hardwareMap.dcMotor.get("lb");
-        rb = hardwareMap.dcMotor.get("rb");
+        lf = hardwareMap.dcMotor.get("frontLeft");
+        rf = hardwareMap.dcMotor.get("frontRight");
+        lb = hardwareMap.dcMotor.get("backLeft");
+        rb = hardwareMap.dcMotor.get("backRight");
 
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        telemetry.addData("Status", "Resetting Encoders");
-        telemetry.update();
-
-        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("Path0", "Starting at %7d :%7d : %7d: %7d ",
-                lf.getCurrentPosition(),
-                rf.getCurrentPosition(),
-                lb.getCurrentPosition(),
-                rb.getCurrentPosition());
-        telemetry.update();
-
-        pipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
-        pipeline.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
-
-        webcam.setPipeline(pipeline);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-            }
-            @Override
-            public void onError(int errorCode) {
-            }
-        });
-
-        waitForStart();
-        if(isStopRequested()) return;
-        while (opModeIsActive())
-        {
-            if(pipeline.error){
-                telemetry.addData("Exception: ", pipeline.debug.getStackTrace());
-            }
-            double rectangleArea = pipeline.getRectArea();
-
-            telemetry.addData("Rectangle Area", rectangleArea);
-            telemetry.addData("XY: ",  pipeline.getRectMidpointXY());
-
-            if(rectangleArea > minRectangleArea){
-
-                if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
-                    telemetry.addData("Barcode Position", "Right");
-                }
-                else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
-                    telemetry.addData("Barcode Position", "Left");
-                }
-                else {
-                    telemetry.addData("Barcode Position", "Center");
-                }
-            }
-            telemetry.update();
-        }
     }
-    public double inValues(double value, double min, double max){
-        if(value < min){ value = min; }
-        if(value > max){ value = max; }
-        return value;
-    }
-    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
-        int newFrontLeftTarget;
-        int newBackLeftTarget;
-        int newFrontRightTarget;
-        int newBackRightTarget;
 
-        if (opModeIsActive()) {
-            lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            newFrontLeftTarget = lf.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newBackLeftTarget = lb.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newFrontRightTarget = rf.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            newBackRightTarget = rb.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-
-            lf.setTargetPosition(newFrontLeftTarget);
-            lb.setTargetPosition(newBackLeftTarget);
-            rf.setTargetPosition(newFrontRightTarget);
-            rb.setTargetPosition(newBackRightTarget);
-
-            lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            lf.setPower(Math.abs(speed));
-            lb.setPower(Math.abs(speed));
-            rf.setPower(Math.abs(speed));
-            rb.setPower(Math.abs(speed));
-
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (lf.isBusy() && rf.isBusy() && lb.isBusy() && rb.isBusy())) {
-                telemetry.addData("Path1", "Running to %7d :%7d : %7d: %7d ", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d : %7d: %7d ",
-                        lf.getCurrentPosition(),
-                        lb.getCurrentPosition(),
-                        rf.getCurrentPosition(),
-                        rb.getCurrentPosition());
-                telemetry.update();
-            }
-            lf.setPower(0);
-            lb.setPower(0);
-            rf.setPower(0);
-            rb.setPower(0);
-
-            lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(250);
-
-            }
-    }
-    public void encoderDriveStrafe(double speed, double leftInches, double rightInches, double timeoutS) {
-        int newFrontLeftTarget;
-        int newBackLeftTarget;
-        int newFrontRightTarget;
-        int newBackRightTarget;
-
-        if (opModeIsActive()) {
-            lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            newFrontLeftTarget = lf.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
-            newBackLeftTarget = lb.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newFrontRightTarget = rf.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            newBackRightTarget = rb.getCurrentPosition() - (int) (rightInches * COUNTS_PER_INCH);
-            lf.setTargetPosition(newFrontLeftTarget);
-            lb.setTargetPosition(newBackLeftTarget);
-            rf.setTargetPosition(newFrontRightTarget);
-            rb.setTargetPosition(newBackRightTarget);
-
-            lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            lf.setPower(Math.abs(-speed));
-            lb.setPower(Math.abs(speed));
-            rf.setPower(Math.abs(speed));
-            rb.setPower(Math.abs(-speed));
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (lf.isBusy() && rf.isBusy() && lb.isBusy() && rb.isBusy())) {
-
-                telemetry.addData("Path1", "Running to %7d :%7d : %7d: %7d ", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d : %7d: %7d ",
-                        lf.getCurrentPosition(),
-                        lb.getCurrentPosition(),
-                        rf.getCurrentPosition(),
-                        rb.getCurrentPosition());
-                telemetry.update();
-            }
-
-            lf.setPower(0);
-            lb.setPower(0);
-            rf.setPower(0);
-            rb.setPower(0);
-
-            lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(250);
-
-        }
-    }
 }
