@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "TeleOpDriving")
@@ -16,7 +15,6 @@ public class TeleOpDriving extends OpMode {
     DcMotor rb;
     DcMotor inTakeMotor;
     DcMotor HangingMotor;
-    Servo droneServo;
     @Override
     public void init() {
 
@@ -26,7 +24,6 @@ public class TeleOpDriving extends OpMode {
         rb = hardwareMap.dcMotor.get("rb");
         inTakeMotor = hardwareMap.dcMotor.get("inTakeMotor");
         HangingMotor = hardwareMap.dcMotor.get("HangingMotor");
-        droneServo = hardwareMap.servo.get("droneServo");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -84,13 +81,6 @@ public class TeleOpDriving extends OpMode {
                 lf.setPower(0);
             }
 
-            //Drone launcher
-            if (gamepad2.right_bumper) {
-                droneServo.setPosition(1);
-            } else {
-                droneServo.setPosition(0);
-            }
-
             //Intake Controller & Motor >:D
 
             if (Math.abs(-gamepad2.left_stick_y) > .2) {
@@ -107,14 +97,6 @@ public class TeleOpDriving extends OpMode {
                         HangingMotor.setPower(gamepad2.left_trigger * 0.8);
                     } else {
                         HangingMotor.setPower(0);
-
-                        //testingprayhang
-                        //if (Math.abs(-gamepad2.left_trigger) > .2) {
-                            //HangingMotor.setPower(gamepad2.left_trigger * 0.8);
-                            //sleep(5000);  
-                        //} else {
-                            //HangingMotor.setPower(0);
-
                     }
                 }
             }
