@@ -38,9 +38,9 @@ public class MyPID {
     /**
      * Create a MiniPID class object.
      * See setP, setI, setD methods for more detailed parameters.
-     * @param p Proportional gain. Large if large difference between setpoint and target.
-     * @param i Integral gain.  Becomes large if setpoint cannot reach target quickly.
-     * @param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
+     * //@param p Proportional gain. Large if large difference between setPoint and target.
+     * //@param i Integral gain.  Becomes large if setPoint cannot reach target quickly.
+     * //@param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
      */
     public MyPID(double p, double i, double d){
         P=p; I=i; D=d;
@@ -50,10 +50,10 @@ public class MyPID {
     /**
      * Create a MiniPID class object.
      * See setP, setI, setD, setF methods for more detailed parameters.
-     * @param p Proportional gain. Large if large difference between setpoint and target.
-     * @param i Integral gain.  Becomes large if setpoint cannot reach target quickly.
-     * @param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
-     * @param f Feed-forward gain. Open loop "best guess" for the output should be. Only useful if setpoint represents a rate.
+     * //@param p Proportional gain. Large if large difference between setPoint and target.
+     * //@param i Integral gain.  Becomes large if setPoint cannot reach target quickly.
+     * //@param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
+     * //@param f Feed-forward gain. Open loop "best guess" for the output should be. Only useful if setPoint represents a rate.
      */
     public MyPID(double p, double i, double d, double f){
         P=p; I=i; D=d; F=f;
@@ -65,13 +65,13 @@ public class MyPID {
     //**********************************
     /**
      * Configure the Proportional gain parameter. <br>
-     * This responds quickly to changes in setpoint, and provides most of the initial driving force
+     * This responds quickly to changes in setPoint, and provides most of the initial driving force
      * to make corrections. <br>
      * Some systems can be used with only a P gain, and many can be operated with only PI.<br>
      * For position based controllers, this is the first parameter to tune, with I second. <br>
      * For rate controlled systems, this is often the second after F.
      *
-     * @param p Proportional gain. Affects output according to <b>output+=P*(setpoint-current_value)</b>
+     * //@param p Proportional gain. Affects output according to <b>output+=P*(setPoint-current_value)</b>
      */
     public void setP(double p){
         P=p;
@@ -82,11 +82,11 @@ public class MyPID {
      * Changes the I parameter <br>
      * This is used for overcoming disturbances, and ensuring that the controller always gets to the control mode.
      * Typically tuned second for "Position" based modes, and third for "Rate" or continuous based modes. <br>
-     * Affects output through <b>output+=previous_errors*Igain ;previous_errors+=current_error</b>
+     * Affects output through <b>output+=previous_errors*IGain ;previous_errors+=current_error</b>
      *
-     * @see {@link #setMaxIOutput(double) setMaxIOutput} for how to restrict
+     * //@see {@link #setMaxIOutput(double) setMaxIOutput} for how to restrict
      *
-     * @param i New gain value for the Integral term
+     * //@param i New gain value for the Integral term
      */
     public void setI(double i){
         if(I!=0){
@@ -107,16 +107,16 @@ public class MyPID {
      * Changes the D parameter <br>
      * This has two primary effects:
      * <list>
-     * <li> Adds a "startup kick" and speeds up system response during setpoint changes
+     * <li> Adds a "startup kick" and speeds up system response during setPoint changes
      * <li> Adds "drag" and slows the system when moving toward the target
      * </list>
      * A small D value can be useful for both improving response times, and preventing overshoot.
      * However, in many systems a large D value will cause significant instability, particularly
-     * for large setpoint changes.
+     * for large setPoint changes.
      * <br>
      * Affects output through <b>output += -D*(current_input_value - last_input_value)</b>
      *
-     * @param d New gain value for the Derivative term
+     * //@param d New gain value for the Derivative term
      */
     public void setD(double d){
         D=d;
@@ -126,11 +126,11 @@ public class MyPID {
     /**
      * Configure the FeedForward parameter. <br>
      * This is excellent for velocity, rate, and other  continuous control modes where you can
-     * expect a rough output value based solely on the setpoint.<br>
+     * expect a rough output value based solely on the setPoint.<br>
      * Should not be used in "position" based control modes.<br>
-     * Affects output according to <b>output+=F*Setpoint</b>. Note, that a F-only system is actually open loop.
+     * Affects output according to <b>output+=F*SetPoint</b>. Note, that a F-only system is actually open loop.
      *
-     * @param f Feed forward gain.
+     * //@param f Feed forward gain.
      */
     public void setF(double f){
         F=f;
@@ -140,9 +140,9 @@ public class MyPID {
     /**
      * Configure the PID object.
      * See setP, setI, setD methods for more detailed parameters.
-     * @param p Proportional gain. Large if large difference between setpoint and target.
-     * @param i Integral gain.  Becomes large if setpoint cannot reach target quickly.
-     * @param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
+     * //@param p Proportional gain. Large if large difference between setPoint and target.
+     * //@param i Integral gain.  Becomes large if setPoint cannot reach target quickly.
+     * //@param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
      */
     public void setPID(double p, double i, double d){
         P=p;D=d;
@@ -155,10 +155,10 @@ public class MyPID {
     /**
      * Configure the PID object.
      * See setP, setI, setD, setF methods for more detailed parameters.
-     * @param p Proportional gain. Large if large difference between setpoint and target.
-     * @param i Integral gain.  Becomes large if setpoint cannot reach target quickly.
-     * @param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
-     * @param f Feed-forward gain. Open loop "best guess" for the output should be. Only useful if setpoint represents a rate.
+     * //@param p Proportional gain. Large if large difference between setPoint and target.
+     * //@param i Integral gain.  Becomes large if setPoint cannot reach target quickly.
+     * //@param d Derivative gain. Responds quickly to large changes in error. Small values prevents P and I terms from causing overshoot.
+     * //@param f Feed-forward gain. Open loop "best guess" for the output should be. Only useful if setPoint represents a rate.
      */
     public void setPID(double p, double i, double d,double f){
         P=p;D=d;F=f;
@@ -171,12 +171,12 @@ public class MyPID {
     /**
      * Set the maximum output value contributed by the I component of the system
      * This can be used to prevent large windup issues and make tuning simpler
-     * @param maximum. Units are the same as the expected output value
+     * //@param maximum. Units are the same as the expected output value
      */
     public void setMaxIOutput(double maximum){
-        // Internally maxError and Izone are similar, but scaled for different purposes.
+        // Internally maxError and IZone are similar, but scaled for different purposes.
         // The maxError is generated for simplifying math, since calculations against
-        // the max error are far more common than changing the I term or Izone.
+        // the max error are far more common than changing the I term or IZone.
         maxIOutput=maximum;
         if(I!=0){
             maxError=maxIOutput/I;
@@ -187,7 +187,7 @@ public class MyPID {
      * Specify a maximum output range. <br>
      * When one input is specified, output range is configured to
      * <b>[-output, output]</b>
-     * @param output
+     * //@param output
      */
     public void setOutputLimits(double output){
         setOutputLimits(-output,output);
@@ -197,8 +197,8 @@ public class MyPID {
      * Specify a  maximum output.
      * When two inputs specified, output range is configured to
      * <b>[minimum, maximum]</b>
-     * @param minimum possible output value
-     * @param maximum possible output value
+     * //@param minimum possible output value
+     * //@param maximum possible output value
      */
     public void setOutputLimits(double minimum,double maximum){
         if(maximum<minimum)return;
@@ -213,7 +213,7 @@ public class MyPID {
 
     /**
      * Set the operating direction of the PID controller
-     * @param reversed Set true to reverse PID output
+     * //@param reversed Set true to reverse PID output
      */
     public void  setDirection(boolean reversed){
         this.reversed=reversed;
@@ -224,11 +224,11 @@ public class MyPID {
     //**********************************
 
     /**
-     * Configure setpoint for the PID calculations<br>
+     * Configure setPoint for the PID calculations<br>
      * This represents the target for the PID system's, such as a
      * position, velocity, or angle. <br>
-     * @see MiniPID#getOutput(actual) <br>
-     * @param setPoint
+     * //@see MiniPID#getOutput(actual) <br>
+     * //@param setPoint
      */
     public void setSetPoint(double setPoint){
         this.setPoint = setPoint;
@@ -236,69 +236,69 @@ public class MyPID {
 
     /**
      * Calculate the output value for the current PID cycle.<br>
-     * @param actual The monitored value, typically as a sensor input.
-     * @param setpoint The target value for the system
-     * @return calculated output value for driving the system
+     * //@param actual The monitored value, typically as a sensor input.
+     * //@param setPoint The target value for the system
+     * //@return calculated output value for driving the system
      */
-    public double getOutput(double actual, double setpoint){
-        double output;
-        double Poutput;
-        double Ioutput;
-        double Doutput;
-        double Foutput;
+    public double getOutput(double actual, double setPoint){
+        double Output;
+        double POutput;
+        double IOutput;
+        double DOutput;
+        double FOutput;
 
-        this.setPoint =setpoint;
+        this.setPoint =setPoint;
 
-        // Ramp the setpoint used for calculations if user has opted to do so
+        // Ramp the setPoint used for calculations if user has opted to do so
         if(setPointRange !=0){
-            setpoint=constrain(setpoint,actual- setPointRange,actual+ setPointRange);
+            setPoint=constrain(setPoint,actual- setPointRange,actual+ setPointRange);
         }
 
         // Do the simple parts of the calculations
-        double error=setpoint-actual;
+        double error=setPoint-actual;
 
-        // Calculate F output. Notice, this depends only on the setpoint, and not the error.
-        Foutput=F*setpoint;
+        // Calculate F output. Notice, this depends only on the setPoint, and not the error.
+        FOutput=F*setPoint;
 
         // Calculate P term
-        Poutput=P*error;
+        POutput=P*error;
 
         // If this is our first time running this, we don't actually _have_ a previous input or output.
         // For sensor, sanely assume it was exactly where it is now.
         // For last output, we can assume it's the current time-independent outputs.
         if(firstRun){
             lastActual=actual;
-            lastOutput=Poutput+Foutput;
+            lastOutput=POutput+FOutput;
             firstRun=false;
         }
 
         // Calculate D Term
         // Note, this is negative. This actually "slows" the system if it's doing
         // the correct thing, and small values helps prevent output spikes and overshoot
-        Doutput= -D*(actual-lastActual);
+        DOutput= -D*(actual-lastActual);
         lastActual=actual;
 
         // The Iterm is more complex. There's several things to factor in to make it easier to deal with.
-        // 1. maxIoutput restricts the amount of output contributed by the Iterm.
-        // 2. prevent windup by not increasing errorSum if we're already running against our max Ioutput
+        // 1. maxIOutput restricts the amount of output contributed by the Iterm.
+        // 2. prevent windup by not increasing errorSum if we're already running against our max IOutput
         // 3. prevent windup by not increasing errorSum if output is output=maxOutput
-        Ioutput=I*errorSum;
+        IOutput=I*errorSum;
         if(maxIOutput!=0){
-            Ioutput=constrain(Ioutput,-maxIOutput,maxIOutput);
+            IOutput=constrain(IOutput,-maxIOutput,maxIOutput);
         }
 
         // And, finally, we can just add the terms up
-        output=Foutput + Poutput + Ioutput + Doutput;
+        Output=FOutput + POutput + IOutput + DOutput;
 
         // Figure out what we're doing with the error.
-        if(minOutput!=maxOutput && !bounded(output, minOutput,maxOutput) ){
+        if(minOutput!=maxOutput && !bounded(Output, minOutput,maxOutput) ){
             errorSum=error;
             // reset the error sum to a sane level
             // Setting to current error ensures a smooth transition when the P term
             // decreases enough for the I term to start acting upon the controller
             // From that point the I term will build up as would be expected
         }
-        else if(outputRampRate!=0 && !bounded(output, lastOutput-outputRampRate,lastOutput+outputRampRate) ){
+        else if(outputRampRate!=0 && !bounded(Output, lastOutput-outputRampRate,lastOutput+outputRampRate) ){
             errorSum=error;
         }
         else if(maxIOutput!=0){
@@ -312,30 +312,30 @@ public class MyPID {
 
         // Restrict output to our specified output and ramp limits
         if(outputRampRate!=0){
-            output=constrain(output, lastOutput-outputRampRate,lastOutput+outputRampRate);
+            Output=constrain(Output, lastOutput-outputRampRate,lastOutput+outputRampRate);
         }
         if(minOutput!=maxOutput){
-            output=constrain(output, minOutput,maxOutput);
+            Output=constrain(Output, minOutput,maxOutput);
         }
         if(outputFilter!=0){
-            output=lastOutput*outputFilter+output*(1-outputFilter);
+            Output=lastOutput*outputFilter+Output*(1-outputFilter);
         }
 
-        // Get a test printline with lots of details about the internal
+        // Get a test printLine with lots of details about the internal
         // calculations. This can be useful for debugging.
-        // System.out.printf("Final output %5.2f [ %5.2f, %5.2f , %5.2f  ], eSum %.2f\n",output,Poutput, Ioutput, Doutput,errorSum );
-        // System.out.printf("%5.2f\t%5.2f\t%5.2f\t%5.2f\n",output,Poutput, Ioutput, Doutput );
+        // System.out.printf("Final output %5.2f [ %5.2f, %5.2f , %5.2f  ], eSum %.2f\n",output,POutput, IOutput, DOutput,errorSum );
+        // System.out.printf("%5.2f\t%5.2f\t%5.2f\t%5.2f\n",output,POutput, IOutput, DOutput );
 
-        lastOutput=output;
-        return output;
+        lastOutput=Output;
+        return Output;
     }
 
     /**
      * Calculate the output value for the current PID cycle.<br>
      * In no-parameter mode, this uses the last sensor value,
-     * and last setpoint value. <br>
+     * and last setPoint value. <br>
      * Not typically useful, and use of parameter modes is suggested. <br>
-     * @return calculated output value for driving the system
+     * //@return calculated output value for driving the system
      */
     public double getOutput(){
         return getOutput(lastActual, setPoint);
@@ -343,11 +343,11 @@ public class MyPID {
 
     /**
      * Calculate the output value for the current PID cycle.<br>
-     * In one parameter mode, the last configured setpoint will be used.<br>
-     * @see MiniPID#setSetpoint()
-     * @param actual The monitored value, typically as a sensor input.
-     * @param setpoint The target value for the system
-     * @return calculated output value for driving the system
+     * In one parameter mode, the last configured setPoint will be used.<br>
+     * //@see MyPID#setSetPoint()
+     * //@param actual The monitored value, typically as a sensor input.
+     * //@param setPoint The target value for the system
+     * //@return calculated output value for driving the system
      */
     public double getOutput(double actual){
         return getOutput(actual, setPoint);
@@ -373,18 +373,18 @@ public class MyPID {
      * Can be very useful for fast-reacting control loops, such as ones
      * with large P or D values and feed-forward systems.
      *
-     * @param rate, with units being the same as the output
+     * //@param rate, with units being the same as the output
      */
     public void setOutputRampRate(double rate){
         outputRampRate=rate;
     }
 
     /**
-     * Set a limit on how far the setpoint can be from the current position
+     * Set a limit on how far the setPoint can be from the current position
      * <br>Can simplify tuning by helping tuning over a small range applies to a much larger range.
      * <br>This limits the reactivity of P term, and restricts impact of large D term
-     * during large setpoint adjustments. Increases lag and I term if range is too small.
-     * @param range, with units being the same as the expected sensor range.
+     * during large setPoint adjustments. Increases lag and I term if range is too small.
+     * //@param range, with units being the same as the expected sensor range.
      */
     public void setSetPointRange(double range){
         setPointRange =range;
@@ -397,9 +397,9 @@ public class MyPID {
      * only the most recent value. <br>
      * Increasing the filter strength will P and D oscillations, but force larger I
      * values and increase I term overshoot.<br>
-     * Uses an exponential wieghted rolling sum filter, according to a simple <br>
+     * Uses an exponential weighted rolling sum filter, according to a simple <br>
      * <pre>output*(1-strength)*sum(0..n){output*strength^n}</pre> algorithm.
-     * @param output valid between [0..1), meaning [current output only.. historical output only)
+     * //@param output valid between [0..1), meaning [current output only.. historical output only)
      */
     public void setOutputFilter(double strength){
         if(strength==0 || bounded(strength,0,1)){
@@ -413,10 +413,10 @@ public class MyPID {
 
     /**
      * Forces a value into a specific range
-     * @param value input value
-     * @param min maximum returned value
-     * @param max minimum value in range
-     * @return Value if it's within provided range, min or max otherwise
+     * //@param value input value
+     * //@param min maximum returned value
+     * //@param max minimum value in range
+     * //@return Value if it's within provided range, min or max otherwise
      */
     private double constrain(double value, double min, double max){
         if(value > max){ return max;}
@@ -426,10 +426,10 @@ public class MyPID {
 
     /**
      * Test if the value is within the min and max, inclusive
-     * @param value to test
-     * @param min Minimum value of range
-     * @param max Maximum value of range
-     * @return true if value is within range, false otherwise
+     * //@param value to test
+     * //@param min Minimum value of range
+     * //@param max Maximum value of range
+     * //@return true if value is within range, false otherwise
      */
     private boolean bounded(double value, double min, double max){
         // Note, this is an inclusive range. This is so tests like
@@ -441,7 +441,7 @@ public class MyPID {
 
     /**
      * To operate correctly, all PID parameters require the same sign
-     * This should align with the {@literal}reversed value
+     * This should align with the {/@literal}reversed value
      */
     private void checkSigns(){
         if(reversed){  // all values should be below zero
@@ -455,5 +455,4 @@ public class MyPID {
             if(I<0) I*=-1;
             if(D<0) D*=-1;
             if(F<0) F*=-1;
-
         }
