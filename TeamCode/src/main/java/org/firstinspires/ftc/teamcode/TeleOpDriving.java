@@ -107,6 +107,14 @@ public class TeleOpDriving extends OpMode {
                         HangingMotor.setPower(gamepad2.left_trigger * 0.8);
                     } else {
                         HangingMotor.setPower(0);
+
+                        //testingprayhang
+                        //if (Math.abs(-gamepad2.left_trigger) > .2) {
+                            //HangingMotor.setPower(gamepad2.left_trigger * 0.8);
+                            //sleep(5000);  
+                        //} else {
+                            //HangingMotor.setPower(0);
+
                     }
                 }
             }
