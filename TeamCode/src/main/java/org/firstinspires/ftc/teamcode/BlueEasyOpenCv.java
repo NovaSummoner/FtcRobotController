@@ -36,7 +36,7 @@ public class BlueEasyOpenCv extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 0.0, 170.0);
+    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 0.0, 200.0);
     public static Scalar scalarUpperYCrCb = new Scalar(255.0, 128.0, 255.0);
 
 
