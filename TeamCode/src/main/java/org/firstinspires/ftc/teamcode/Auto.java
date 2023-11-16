@@ -12,10 +12,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Auto extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private DcMotor fr   = null;
-    private DcMotor         fl  = null;
-    private DcMotor         bl  = null;
-    private DcMotor         br  = null;
+    private DcMotor fr  = null;
+    private DcMotor fl  = null;
+    private DcMotor bl  = null;
+    private DcMotor br  = null;
 
 
     private ElapsedTime runtime = new ElapsedTime();

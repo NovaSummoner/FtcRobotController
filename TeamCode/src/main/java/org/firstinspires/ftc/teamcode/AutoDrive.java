@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "AutoDrive")
-public class    AutoDrive extends LinearOpMode {
+public class AutoDrive extends LinearOpMode {
 
     DcMotor lf;
     DcMotor lb;
