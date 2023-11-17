@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-//@Disabled
-@TeleOp (name = "Concept: Gamepad Touch", group = "Concept")
+@Disabled
+@TeleOp (name = "Gamepad Touch", group = "TeleOp")
 public class TouchPad extends LinearOpMode
 {
     @Override

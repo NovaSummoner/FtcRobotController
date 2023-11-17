@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.TouchPad;
 
-@TeleOp(name = "TeleOpDriving")
+@TeleOp(name = "TeleOpDriving", group = "TeleOp")
 public class TeleOpDriving extends OpMode {
 
     DcMotor lf;
@@ -100,8 +101,15 @@ public class TeleOpDriving extends OpMode {
                     }
                 }
             }
+
+            if(gamepad1.touchpad_finger_1) {
+                boolean finger = true;
+            } else {
+                boolean finger = false;
+            }
         }
-    }}
+    }
+}
 
 
 
