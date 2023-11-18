@@ -40,8 +40,8 @@ public class fourmotortesting extends OpMode {
             rb.setPower(0);
             rf.setPower(0);
         }
-
-        if (Math.abs(-gamepad1.left_stick_y) > .2) {
+// Front back left
+        if (Math.abs(gamepad1.left_stick_y) > .2) {
             lf.setPower(gamepad1.left_stick_y * 1);
             lb.setPower(gamepad1.left_stick_y * 1);
         } else {
@@ -54,7 +54,9 @@ public class fourmotortesting extends OpMode {
                 lf.setPower(-gamepad1.right_trigger * 1);
                 rb.setPower(gamepad1.right_trigger * 1);
                 lb.setPower(gamepad1.right_trigger * 1);
-                rf.setPower(-gamepad1.right_trigger * 1);
+                if(gamepad1.touchpad_finger_1) {
+                    boolean finger = true;
+                    rf.setPower(-gamepad1.right_trigger * 5);
 
             } else {
                 rf.setPower(0);
@@ -77,6 +79,7 @@ public class fourmotortesting extends OpMode {
                 lf.setPower(0);
             }
 
+            }
         }
     }
 }
