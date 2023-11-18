@@ -1,15 +1,5 @@
 package org.firstinspires.ftc.teamcode.vroom;
 
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.*;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -46,6 +36,18 @@ import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.vroom.DriveConstants.kV;
 
 /*
  * Simple tank drive hardware implementation for REV hardware.
@@ -88,7 +90,7 @@ public class SampleTankDrive extends TankDrive {
         // TODO: adjust the names of the following hardware devices to match your configuration
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                org.firstinspires.ftc.teamcode.vroom.DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
+                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
         // add/remove motors depending on your robot (e.g., 6WD)
