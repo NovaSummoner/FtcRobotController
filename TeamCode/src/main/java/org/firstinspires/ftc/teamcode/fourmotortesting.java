@@ -54,8 +54,7 @@ public class fourmotortesting extends OpMode {
                 lf.setPower(-gamepad1.right_trigger * 1);
                 rb.setPower(gamepad1.right_trigger * 1);
                 lb.setPower(gamepad1.right_trigger * 1);
-                if(gamepad1.touchpad_finger_1) {
-                    boolean finger = true;
+                //band-aid :)
                     rf.setPower(-gamepad1.right_trigger * 5);
 
             } else {
@@ -82,7 +81,6 @@ public class fourmotortesting extends OpMode {
             }
         }
     }
-}
 
 
 
