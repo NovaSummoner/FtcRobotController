@@ -12,10 +12,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Auto extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private DcMotor fr  = null;
-    private DcMotor fl  = null;
-    private DcMotor bl  = null;
-    private DcMotor br  = null;
+    private DcMotor rf = null;
+    private DcMotor lf = null;
+    private DcMotor lb = null;
+    private DcMotor rb = null;
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -27,8 +27,8 @@ public class Auto extends LinearOpMode {
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // No External Gearing.
+    static final double     WHEEL_DIAMETER_INCHES   = 7.55906 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
@@ -38,35 +38,35 @@ public class Auto extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize the drive system variables.
-        fr  = hardwareMap.get(DcMotor.class, "frontRight");
-        fl = hardwareMap.get(DcMotor.class, "frontLeft");
-        br  = hardwareMap.get(DcMotor.class, "backRight");
-        bl  = hardwareMap.get(DcMotor.class, "backLeft");
+        rf = hardwareMap.get(DcMotor.class, "rf");
+        lf = hardwareMap.get(DcMotor.class, "lf");
+        rb = hardwareMap.get(DcMotor.class, "rb");
+        lb = hardwareMap.get(DcMotor.class, "lb");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        fr.setDirection(DcMotor.Direction.FORWARD);
-        fl.setDirection(DcMotor.Direction.FORWARD);
-        br.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.FORWARD);
+        rf.setDirection(DcMotor.Direction.FORWARD);
+        lf.setDirection(DcMotor.Direction.FORWARD);
+        rb.setDirection(DcMotor.Direction.FORWARD);
+        lb.setDirection(DcMotor.Direction.FORWARD);
 
-        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d :%7d :%7d",
-                fr.getCurrentPosition(),
-                fl.getCurrentPosition(),
-                br.getCurrentPosition(),
-                bl.getCurrentPosition());
+                rf.getCurrentPosition(),
+                lf.getCurrentPosition(),
+                rb.getCurrentPosition(),
+                lb.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -95,36 +95,36 @@ public class Auto extends LinearOpMode {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
-        int newflTarget;
-        int newfrTarget;
-        int newblTarget;
-        int newbrTarget;
+        int newlfTarget;
+        int newrfTarget;
+        int newlbTarget;
+        int newrbTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newflTarget = fl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            fl.setTargetPosition(newflTarget);
-            fr.setTargetPosition(newfrTarget);
-            bl.setTargetPosition(newblTarget);
-            br.setTargetPosition(newbrTarget);
+            newlfTarget = lf.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newrfTarget = rf.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newlbTarget = lb.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newrbTarget = rb.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            lf.setTargetPosition(newlfTarget);
+            rf.setTargetPosition(newrfTarget);
+            lb.setTargetPosition(newlbTarget);
+            rb.setTargetPosition(newrbTarget);
 
             // Turn On RUN_TO_POSITION
-            fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            fr.setPower(Math.abs(speed));
-            fl.setPower(Math.abs(speed));
-            br.setPower(Math.abs(speed));
-            bl.setPower(Math.abs(speed));
+            rf.setPower(Math.abs(speed));
+            lf.setPower(Math.abs(speed));
+            rb.setPower(Math.abs(speed));
+            lb.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -134,26 +134,26 @@ public class Auto extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (fr.isBusy() && br.isBusy() && bl.isBusy() && fl.isBusy())) {
+                    (rf.isBusy() && rb.isBusy() && lb.isBusy() && lf.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d :%7d :%7d", newfrTarget,  newflTarget, newbrTarget, newblTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d :%7d :%7d", newfrTarget, newflTarget, newbrTarget, newblTarget,
-                        fr.getCurrentPosition(), fl.getCurrentPosition(), br.getCurrentPosition(), bl.getCurrentPosition());
+                telemetry.addData("Running to",  " %7d :%7d :%7d :%7d", newrfTarget,  newlfTarget, newrbTarget, newlbTarget);
+                telemetry.addData("Currently at",  " at %7d :%7d :%7d :%7d", newrfTarget, newlfTarget, newrbTarget, newlbTarget,
+                        rf.getCurrentPosition(), lf.getCurrentPosition(), rb.getCurrentPosition(), lb.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            fr.setPower(0);
-            fl.setPower(0);
-            br.setPower(0);
-            bl.setPower(0);
+            rf.setPower(0);
+            lf.setPower(0);
+            rb.setPower(0);
+            lb.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
         }
@@ -171,27 +171,27 @@ public class Auto extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             // For strafing one side's wheels 'attract' each other while the other side 'repels' each other
             //The positive value will make the robot go to the left with current arrangement
-            newflTarget = fl.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
-            newfrTarget = fr.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newblTarget = bl.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbrTarget = br.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
-            fl.setTargetPosition(newflTarget);
-            fr.setTargetPosition(newfrTarget);
-            bl.setTargetPosition(newblTarget);
-            br.setTargetPosition(newbrTarget);
+            newflTarget = lf.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newfrTarget = rf.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newblTarget = lb.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newbrTarget = rb.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH);
+            lf.setTargetPosition(newflTarget);
+            rf.setTargetPosition(newfrTarget);
+            lb.setTargetPosition(newblTarget);
+            rb.setTargetPosition(newbrTarget);
 
             // Turn On RUN_TO_POSITION
-            fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            fr.setPower(Math.abs(speed));
-            fl.setPower(Math.abs(speed));
-            br.setPower(Math.abs(speed));
-            bl.setPower(Math.abs(speed));
+            rf.setPower(Math.abs(speed));
+            lf.setPower(Math.abs(speed));
+            rb.setPower(Math.abs(speed));
+            lb.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -201,31 +201,31 @@ public class Auto extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (fr.isBusy() && br.isBusy() && bl.isBusy() && fl.isBusy())) {
+                    (rf.isBusy() && rb.isBusy() && lb.isBusy() && lf.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d :%7d :%7d", newfrTarget,  newflTarget, newbrTarget, newblTarget);
                 telemetry.addData("Currently at",  " at %7d :%7d :%7d :%7d", newfrTarget, newflTarget, newbrTarget, newblTarget,
-                        fr.getCurrentPosition(), fl.getCurrentPosition(), br.getCurrentPosition(), bl.getCurrentPosition());
+                        rf.getCurrentPosition(), lf.getCurrentPosition(), rb.getCurrentPosition(), lb.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            fr.setPower(0);
-            fl.setPower(0);
-            br.setPower(0);
-            bl.setPower(0);
+            rf.setPower(0);
+            lf.setPower(0);
+            rb.setPower(0);
+            lb.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
         }
     }
 
     //private boolean opModeIsActive() {
-      //}
+    //}
 }
