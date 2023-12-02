@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -15,6 +17,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class BlueEasyOpenCv extends LinearOpMode {
     DcMotor lf, lb, rf, rb;
+    CRServo droneServo, inOutServo;
+    Servo inOutPrepServo;
 
     static final double COUNTS_PER_MOTOR_REV = 537.7;
     static final double DRIVE_GEAR_REDUCTION = 1;
@@ -114,15 +118,36 @@ public class BlueEasyOpenCv extends LinearOpMode {
 
                 if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Right");
+                    encoderDrive(1, 18,18,1);
+                    encoderDrive(1,9,-9,1);
+                    inOutPrepServo.setPosition(0.75);
+                    inOutServo.setPower(1);
+                    inOutPrepServo.setPosition(0.75);
+                    encoderDrive(1,-18,18,1);
+                    encoderDrive(1,80,80,1);
                 }
                 else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Left");
+                    encoderDrive(1,18,18,1);
+                    encoderDrive(1,-9,9,1);
+                    inOutPrepServo.setPosition(0.75);
+                    inOutServo.setPower(1);
+                    inOutPrepServo.setPosition(0.75);
+                    encoderDrive(1,80,80,1);
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
+                    encoderDrive(1, 18, 18, 1);
+                    inOutPrepServo.setPosition(0.75);
+                    inOutServo.setPower(1);
+                    inOutPrepServo.setPosition(0.75);
+                    encoderDrive(1, -9, 9 ,1);
+                    encoderDrive(1, 80, 80, 1);
                 }
             }
             telemetry.update();
+
+
         }
     }
     public double inValues(double value, double min, double max){
