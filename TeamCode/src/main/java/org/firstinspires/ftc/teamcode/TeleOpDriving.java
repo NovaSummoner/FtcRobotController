@@ -18,7 +18,7 @@ public class TeleOpDriving extends OpMode {
     DcMotor rb;
     Servo inOutPrepServo;
     CRServo inOutServo;
-    Servo droneServo;
+    CRServo droneServo;
     DcMotor HangingMotor1;
     @Override
     public void init() {
@@ -30,7 +30,7 @@ public class TeleOpDriving extends OpMode {
         inOutPrepServo = hardwareMap.servo.get("Prep");
         HangingMotor1 = hardwareMap.dcMotor.get("Hang1");
         inOutServo = hardwareMap.crservo.get("inOut");
-        droneServo = hardwareMap.servo.get("drone");
+        droneServo = hardwareMap.crservo.get("drone");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -121,10 +121,10 @@ public class TeleOpDriving extends OpMode {
 
             //drone launcher
 
-        if (gamepad2.left_bumper) {
-            droneServo.setPosition(0.5);
-        } else if (gamepad2.left_bumper) {
-            droneServo.setPosition(0);
+        if (gamepad2.dpad_up) {
+            droneServo.setPower(-1);
+        } else if (gamepad2.dpad_down) {
+            droneServo.setPower(0);
         }
 
         if(gamepad1.touchpad_finger_1) {
