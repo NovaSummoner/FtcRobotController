@@ -120,9 +120,9 @@ public class BlueEasyOpenCv extends LinearOpMode {
                     telemetry.addData("Barcode Position", "Right");
                     encoderDrive(1, 18,18,1);
                     encoderDrive(1,9,-9,1);
-                    inOutPrepServo.setPosition(0.75);
+                    inOutPrepServo.setPosition(0);
                     inOutServo.setPower(1);
-                    inOutPrepServo.setPosition(0.75);
+                    inOutPrepServo.setPosition(100);
                     encoderDrive(1,-18,18,1);
                     encoderDrive(1,80,80,1);
                 }
@@ -130,17 +130,17 @@ public class BlueEasyOpenCv extends LinearOpMode {
                     telemetry.addData("Barcode Position", "Left");
                     encoderDrive(1,18,18,1);
                     encoderDrive(1,-9,9,1);
-                    inOutPrepServo.setPosition(0.75);
+                    inOutPrepServo.setPosition(0);
                     inOutServo.setPower(1);
-                    inOutPrepServo.setPosition(0.75);
+                    inOutPrepServo.setPosition(100);
                     encoderDrive(1,80,80,1);
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
                     encoderDrive(1, 18, 18, 1);
-                    inOutPrepServo.setPosition(0.75);
+                    inOutPrepServo.setPosition(0);
                     inOutServo.setPower(1);
-                    inOutPrepServo.setPosition(0.75);
+                    inOutPrepServo.setPosition(100);
                     encoderDrive(1, -9, 9 ,1);
                     encoderDrive(1, 80, 80, 1);
                 }
