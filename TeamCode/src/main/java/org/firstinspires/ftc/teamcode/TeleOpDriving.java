@@ -18,7 +18,8 @@ public class TeleOpDriving extends OpMode {
     DcMotor rb;
     Servo inOutPrepServo;
     CRServo inOutServo;
-    DcMotor HangingMotor;
+    Servo droneServo;
+    DcMotor HangingMotor1;
     @Override
     public void init() {
 
@@ -27,14 +28,14 @@ public class TeleOpDriving extends OpMode {
         rf = hardwareMap.dcMotor.get("rf");
         rb = hardwareMap.dcMotor.get("rb");
         inOutPrepServo = hardwareMap.servo.get("Prep");
-        HangingMotor = hardwareMap.dcMotor.get("Hang");
+        HangingMotor1 = hardwareMap.dcMotor.get("Hang1");
         inOutServo = hardwareMap.crservo.get("inOut");
+        droneServo = hardwareMap.servo.get("drone");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        HangingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
+        HangingMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     @Override
@@ -105,21 +106,28 @@ public class TeleOpDriving extends OpMode {
                 inOutServo.setPower(0);
             }
 
-
                 if (Math.abs(-gamepad2.right_trigger) > .2) {
-                    HangingMotor.setPower(gamepad2.right_trigger * -0.8);
+                    HangingMotor1.setPower(gamepad2.right_trigger * -0.8);
                 } else {
-                    HangingMotor.setPower(0);
+                    HangingMotor1.setPower(0);
 
                     if (Math.abs(-gamepad2.left_trigger) > .2) {
-                        HangingMotor.setPower(gamepad2.left_trigger * 0.8);
+                        HangingMotor1.setPower(gamepad2.left_trigger * 0.8);
                     } else {
-                        HangingMotor.setPower(0);
+                        HangingMotor1.setPower(0);
                     }
                 }
             }
 
-            if(gamepad1.touchpad_finger_1) {
+            //drone launcher
+
+        if (gamepad2.left_bumper) {
+            droneServo.setPosition(0.5);
+        } else if (gamepad2.left_bumper) {
+            droneServo.setPosition(0);
+        }
+
+        if(gamepad1.touchpad_finger_1) {
                 boolean finger = true;
             } else {
                 boolean finger = false;

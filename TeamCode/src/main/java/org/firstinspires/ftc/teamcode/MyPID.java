@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 public class MyPID {
-    //**********************************
     // Class private variables
-    //**********************************
     private double P;
     private double I;
     private double D;
