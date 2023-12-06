@@ -16,7 +16,7 @@ public class TeleOpDriving extends OpMode {
     DcMotor lb;
     DcMotor rf;
     DcMotor rb;
-    Servo inOutPrepServo;
+    CRServo inOutPrepServo;
     CRServo inOutServo;
     CRServo droneServo;
     DcMotor HangingMotor1;
@@ -27,7 +27,7 @@ public class TeleOpDriving extends OpMode {
         lb = hardwareMap.dcMotor.get("lb");
         rf = hardwareMap.dcMotor.get("rf");
         rb = hardwareMap.dcMotor.get("rb");
-        inOutPrepServo = hardwareMap.servo.get("Prep");
+        inOutPrepServo = hardwareMap.crservo.get("Prep");
         HangingMotor1 = hardwareMap.dcMotor.get("Hang1");
         inOutServo = hardwareMap.crservo.get("inOut");
         droneServo = hardwareMap.crservo.get("drone");
@@ -89,15 +89,15 @@ public class TeleOpDriving extends OpMode {
             //Intake Controller & Motor >:D
 
             if (gamepad2.a) {
-                inOutPrepServo.setPosition(0.5);
-            } else if (gamepad2.b) {
-                inOutPrepServo.setPosition(100);
+                inOutPrepServo.setPower(1);
+            } else {
+                inOutServo.setPower(0);
             }
 
-            if (gamepad2.x) {
-                inOutPrepServo.setPosition(0.78);
-            } else if (gamepad2.b) {
-                inOutPrepServo.setPosition(100);
+            if (gamepad2.b) {
+                inOutPrepServo.setPower(-1);
+            } else {
+                inOutPrepServo.setPower(0);
             }
 
             if (Math.abs(-gamepad2.left_stick_y) > 0.2) {
