@@ -106,20 +106,20 @@ public class TeleOpDriving extends OpMode {
                 inOutServo.setPower(0);
             }
 
-                if (Math.abs(-gamepad2.right_trigger) > .2) {
-                    HangingMotor1.setPower(gamepad2.right_trigger * -0.8);
+            if (Math.abs(-gamepad2.right_trigger) > .2) {
+                HangingMotor1.setPower(gamepad2.right_trigger * -0.8);
+            } else {
+                HangingMotor1.setPower(0);
+
+                if (Math.abs(-gamepad2.left_trigger) > .2) {
+                    HangingMotor1.setPower(gamepad2.left_trigger * 0.8);
                 } else {
                     HangingMotor1.setPower(0);
-
-                    if (Math.abs(-gamepad2.left_trigger) > .2) {
-                        HangingMotor1.setPower(gamepad2.left_trigger * 0.8);
-                    } else {
-                        HangingMotor1.setPower(0);
-                    }
                 }
             }
+        }
 
-            //drone launcher
+        //drone launcher
 
         if (gamepad2.dpad_up) {
             droneServo.setPower(-1);
@@ -128,12 +128,12 @@ public class TeleOpDriving extends OpMode {
         }
 
         if(gamepad1.touchpad_finger_1) {
-                boolean finger = true;
-            } else {
-                boolean finger = false;
-            }
+            boolean finger = true;
+        } else {
+            boolean finger = false;
         }
     }
+}
 
 
 
