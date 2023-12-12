@@ -53,6 +53,7 @@ public class MyOdometryOpmode extends LinearOpMode {
             right_back.setPower(PIVOT_SPEED);
             left_front.setPower(PIVOT_SPEED);
             left_back.setPower(PIVOT_SPEED);
+
             if (getZAngle() < 60) {
                 setPowerAll(PIVOT_SPEED, PIVOT_SPEED, PIVOT_SPEED, PIVOT_SPEED);
             } else {
