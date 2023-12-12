@@ -96,7 +96,6 @@ public class MyOdometryOpmode extends LinearOpMode {
 
         }
 
-
     }
 
     private void initHardwareMap(String rfName, String rbName, String lfName, String lbName, String vlEncoderName, String vrEncoderName, String hEncoderName) {

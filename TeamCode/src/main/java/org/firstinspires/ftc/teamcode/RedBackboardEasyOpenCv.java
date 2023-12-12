@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -18,6 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class RedBackboardEasyOpenCv extends LinearOpMode {
     DcMotor lf, lb, rf, rb;
     Servo claw;
+    BNO055IMU imu;
 
     static final double COUNTS_PER_MOTOR_REV = 537.7;
     static final double DRIVE_GEAR_REDUCTION = 1;
@@ -45,6 +48,13 @@ public class RedBackboardEasyOpenCv extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imu.initialize(parameters);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "camera"), cameraMonitorViewId);
 
@@ -135,6 +145,7 @@ public class RedBackboardEasyOpenCv extends LinearOpMode {
             telemetry.update();
         }
     }
+
     public double inValues(double value, double min, double max){
         if(value < min){ value = min; }
         if(value > max){ value = max; }
