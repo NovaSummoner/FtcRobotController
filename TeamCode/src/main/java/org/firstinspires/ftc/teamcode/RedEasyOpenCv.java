@@ -27,6 +27,7 @@ public class RedEasyOpenCv extends LinearOpMode {
     static final double WEBCAM_WIDTH = 640;
     private OpenCvCamera webcam;
     private RedContourPipeline pipeline;
+    private PIDF_Arm pidf_arm;
 
     private int minRectangleArea = 2000;
     private double leftBarcodeRangeBoundary = 0.3;
@@ -120,6 +121,9 @@ public class RedEasyOpenCv extends LinearOpMode {
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
+                    sleep(2000);
+                    encoderDrive(0.2,10,10,3);
+                    PIDF_Arm.target = -60;
                 }
             }
             telemetry.update();
