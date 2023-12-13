@@ -131,14 +131,22 @@ public class RedEasyOpenCv extends LinearOpMode {
                     sleep(2000);
                     encoderDrive(0.2,10,10,3);
                     while (getZAngle() < 90 && opModeIsActive()) {
+                        right_front.setPower(0.2);
+                        right_back.setPower(0.2);
+                        left_front.setPower(-0.2);
+                        left_back.setPower(-0.2);
+                    }
+                }
+                else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
+                    telemetry.addData("Barcode Position", "Left");
+                    while (getZAngle() < 90 && opModeIsActive()) {
+                        sleep(2000);
+                        encoderDrive(0.2,10,10,3);
                         right_front.setPower(-0.2);
                         right_back.setPower(-0.2);
                         left_front.setPower(0.2);
                         left_back.setPower(0.2);
                     }
-                }
-                else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
-                    telemetry.addData("Barcode Position", "Left");
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
