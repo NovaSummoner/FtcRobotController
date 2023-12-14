@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,7 +16,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.io.File;
-
+@Config
 @Autonomous
 public class RedEasyOpenCv extends LinearOpMode {
     DcMotor right_front, right_back, left_front, left_back;
@@ -130,29 +131,29 @@ public class RedEasyOpenCv extends LinearOpMode {
                     telemetry.addData("Barcode Position", "Right");
                     sleep(2000);
                     encoderDrive(0.2,10,10,3);
-                    while (getZAngle() < 90 && opModeIsActive()) {
-                        right_front.setPower(0.2);
-                        right_back.setPower(0.2);
-                        left_front.setPower(-0.2);
-                        left_back.setPower(-0.2);
+                    while (getZAngle() < 90) {
+                        right_front.setPower(1);
+                        right_back.setPower(1);
+                        left_front.setPower(-1);
+                        left_back.setPower(-1);
+
                     }
                 }
                 else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Left");
-                    while (getZAngle() < 90 && opModeIsActive()) {
-                        sleep(2000);
-                        encoderDrive(0.2,10,10,3);
-                        right_front.setPower(-0.2);
-                        right_back.setPower(-0.2);
-                        left_front.setPower(0.2);
-                        left_back.setPower(0.2);
+                    sleep(2000);
+                    encoderDrive(0.2,10,10,3);
+                    while (getZAngle() < 90) {
+                        right_front.setPower(-1);
+                        right_back.setPower(-1);
+                        left_front.setPower(1);
+                        left_back.setPower(1);
                     }
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
                     sleep(2000);
                     encoderDrive(0.2,10,10,3);
-                    PIDF_Arm.target = -60;
                 }
             }
             telemetry.update();
