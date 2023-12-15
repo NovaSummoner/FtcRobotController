@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 
 import static org.firstinspires.ftc.teamcode.PIDF_Arm.d;
+import static org.firstinspires.ftc.teamcode.PIDF_Arm.f;
 import static org.firstinspires.ftc.teamcode.PIDF_Arm.i;
 import static org.firstinspires.ftc.teamcode.PIDF_Arm.p;
+import static org.firstinspires.ftc.teamcode.PIDF_Arm.target;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -39,8 +41,6 @@ public class RedEasyOpenCv extends LinearOpMode {
     private int minRectangleArea = 2000;
     private double leftBarcodeRangeBoundary = 0.3;
     private double rightBarcodeRangeBoundary = 0.7;
-    private double lowerRuntime = 0;
-    private double upperRuntime = 0;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -49,8 +49,8 @@ public class RedEasyOpenCv extends LinearOpMode {
     private PIDController controller;
     private DcMotorEx arm_motor;
     private final double ticks_in_degrees = 2786.2 / 180.0;
-    private double counter = 0;
-
+    private static int armTarget = 0;
+    private long encoderDriveStartTime = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -134,24 +134,40 @@ public class RedEasyOpenCv extends LinearOpMode {
             telemetry.addData("Rectangle Area", rectangleArea);
             telemetry.addData("XY: ",  pipeline.getRectMidpointXY());
 
+            int armPos = arm_motor.getCurrentPosition();
+            double pid = controller.calculate(armPos, armTarget);
+            double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+            double power = pid + ff;
+            arm_motor.setPower(power);
+
             if(rectangleArea > minRectangleArea){
 
                 if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
+                    encoderDriveStartTime = System.currentTimeMillis() + 2000;
                     telemetry.addData("Barcode Position", "Right");
-                    sleep(2000);
-                    encoderDrive(0.2,10,10,3);
+                    if (encoderDriveStartTime > 0 && System.currentTimeMillis() >= encoderDriveStartTime) {
+                        encoderDrive(0.2,10,10,3);
+                        }
+                    encoderDriveStartTime = 0;
                     }
                 }
                 else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
-                    telemetry.addData("Barcode Position", "Left");
-                    sleep(2000);
+                encoderDriveStartTime = System.currentTimeMillis() + 2000;
+                telemetry.addData("Barcode Position", "Left");
+                    if (encoderDriveStartTime > 0 && System.currentTimeMillis() >= encoderDriveStartTime) {
                     encoderDrive(0.2,10,10,3);
-                }
+                    }
+                encoderDriveStartTime = 0;
+
+            }
                 else {
-                    telemetry.addData("Barcode Position", "Center");
-                    sleep(2000);
+                encoderDriveStartTime = System.currentTimeMillis() + 2000;
+                telemetry.addData("Barcode Position", "Center");
+                    if (encoderDriveStartTime > 0 && System.currentTimeMillis() >= encoderDriveStartTime) {
                     encoderDrive(0.2,10,10,3);
-                 }
+                    }
+                encoderDriveStartTime = 0;
+                }
             }
         telemetry.update();
         }

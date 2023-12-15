@@ -26,10 +26,10 @@ public class AutoTest extends LinearOpMode {
 
         waitForStart();
 
-        left_front.setPower(1);
-        right_front.setPower(1);
-        left_back.setPower(1);
-        right_front.setPower(1);
-        sleep(25000);
+        left_front.setPower(0.5);
+        right_front.setPower(0.5);
+        left_back.setPower(0.5);
+        right_back.setPower(0.5);
+        sleep(5000);
     }
 }
