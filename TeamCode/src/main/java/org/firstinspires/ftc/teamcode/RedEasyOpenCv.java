@@ -1,23 +1,29 @@
 package org.firstinspires.ftc.teamcode;
 
+
+import static org.firstinspires.ftc.teamcode.PIDF_Arm.d;
+import static org.firstinspires.ftc.teamcode.PIDF_Arm.i;
+import static org.firstinspires.ftc.teamcode.PIDF_Arm.p;
+
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.opencv.core.Scalar;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-
-import java.io.File;
 @Config
-@Autonomous
+@TeleOp
 public class RedEasyOpenCv extends LinearOpMode {
     DcMotor right_front, right_back, left_front, left_back;
     BNO055IMU imu;
@@ -26,14 +32,10 @@ public class RedEasyOpenCv extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 3.77953;
 
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double DRIVE_SPEED = 0.2;
-    static final double TURN_SPEED = 0.5;
 
     static final double WEBCAM_WIDTH = 640;
     private OpenCvCamera webcam;
     private RedContourPipeline pipeline;
-    private PIDF_Arm pidf_arm;
-
     private int minRectangleArea = 2000;
     private double leftBarcodeRangeBoundary = 0.3;
     private double rightBarcodeRangeBoundary = 0.7;
@@ -44,9 +46,10 @@ public class RedEasyOpenCv extends LinearOpMode {
 
     public static Scalar scalarLowerYCrCb = new Scalar(0.0, 200.0, 0.0);
     public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 128.0);
-
-    File horizontalTickOffsetFile = AppUtil.getInstance().getSettingsFile("horizontalTickOffset.txt");
-
+    private PIDController controller;
+    private DcMotorEx arm_motor;
+    private final double ticks_in_degrees = 2786.2 / 180.0;
+    private double counter = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -59,6 +62,11 @@ public class RedEasyOpenCv extends LinearOpMode {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "camera"), cameraMonitorViewId);
+
+        controller = new PIDController(p, i, d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        arm_motor = hardwareMap.get(DcMotorEx.class, "arm_motor");
 
         pipeline = new RedContourPipeline(0.0, 0.0, 0.0, 0.0);
 
@@ -111,6 +119,7 @@ public class RedEasyOpenCv extends LinearOpMode {
             @Override
             public void onError(int errorCode) {
             }
+
         });
 
         waitForStart();
@@ -131,34 +140,21 @@ public class RedEasyOpenCv extends LinearOpMode {
                     telemetry.addData("Barcode Position", "Right");
                     sleep(2000);
                     encoderDrive(0.2,10,10,3);
-                    while (getZAngle() < 90) {
-                        right_front.setPower(1);
-                        right_back.setPower(1);
-                        left_front.setPower(-1);
-                        left_back.setPower(-1);
-
                     }
                 }
                 else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Left");
                     sleep(2000);
                     encoderDrive(0.2,10,10,3);
-                    while (getZAngle() < 90) {
-                        right_front.setPower(-1);
-                        right_back.setPower(-1);
-                        left_front.setPower(1);
-                        left_back.setPower(1);
-                    }
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
                     sleep(2000);
                     encoderDrive(0.2,10,10,3);
-                }
+                 }
             }
-            telemetry.update();
+        telemetry.update();
         }
-    }
     public double inValues(double value, double min, double max){
         if(value < min){ value = min; }
         if(value > max){ value = max; }
@@ -280,4 +276,5 @@ public class RedEasyOpenCv extends LinearOpMode {
     }
     private double getZAngle() {return (-imu.getAngularOrientation().firstAngle);
     }
+
 }

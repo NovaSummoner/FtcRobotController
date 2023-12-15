@@ -12,12 +12,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @Autonomous
 public class PIDF_Arm extends OpMode {
     private PIDController controller;
-    public static double p = 0.01, i = 0.3, d = 0.001;
+    public static double p = 0.02, i = 1, d = 0.001;
     public static double f = 0.1;
     public static int target = -60;
     private final double ticks_in_degrees = 2786.2 / 180.0;
     private DcMotorEx arm_motor;
-
 
     @Override
     public void init() {
@@ -28,7 +27,7 @@ public class PIDF_Arm extends OpMode {
     }
 
     @Override
-    public void  loop() {
+    public void loop() {
         controller.setPID(p, i, d);
         int armPos = arm_motor.getCurrentPosition();
         double pid = controller.calculate(armPos, target);
