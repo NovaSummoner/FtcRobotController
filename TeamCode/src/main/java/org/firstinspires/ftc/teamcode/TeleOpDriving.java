@@ -104,6 +104,31 @@ public class TeleOpDriving extends OpMode {
                 armMotor.setPower(0);
             }
 
+            //Hanging motor/mechanism
+            if (Math.abs(gamepad2.left_bumper) > .2) {
+                hangMotor.setPower(-.3);
+            } else {
+                hangMotor.setPower(0);
+            }
+
+            if (Math.abs(gamepad2.right_bumper) > .2) {
+                hangMotor.setPower(.3);
+            } else {
+                hangMotor.setPower(0);
+            }
+
+            if (Math.abs(gamepad2.left_trigger) > .2) {
+                laArmMotor.setPower(-.3);
+            } else {
+                laArmMotor.setPower(0);
+            }
+
+            if (Math.abs(gamepad2.right_trigger) > .2) {
+                hangMotor.setPower(-.3);
+            } else {
+                hangMotor.setPower(0);
+            }
+
             //Drone launcher
             //if (gamepad2.right_bumper) {
                //airLauncher.setPower(1);
