@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "TeleOpDriving", group = "TeleOp")
 public class TeleOpDriving extends OpMode {
@@ -17,10 +18,10 @@ public class TeleOpDriving extends OpMode {
     DcMotor laArmMotor;
 
 
-    CRServo prepClaw;
+    Servo prepClaw;
     CRServo claw;
     CRServo airLauncher;
-    CRServo pixelP;
+    Servo pixelP;
     @Override
     public void init() {
 
@@ -31,10 +32,10 @@ public class TeleOpDriving extends OpMode {
         hangMotor = hardwareMap.dcMotor.get("armMotor");
         armMotor = hardwareMap.dcMotor.get("armMotor");
         laArmMotor = hardwareMap.dcMotor.get("laArmMotor");
-        prepClaw = hardwareMap.crservo.get("prepClaw");
+        prepClaw = hardwareMap.servo.get("prepClaw");
         claw = hardwareMap.crservo.get("claw");
         airLauncher = hardwareMap.crservo.get("airLauncher");
-        pixelP = hardwareMap.crservo.get("pixelP");
+        pixelP = hardwareMap.servo.get("pixelP");
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -46,7 +47,6 @@ public class TeleOpDriving extends OpMode {
 
     @Override
     public void loop() {
-
         //Front back Right
         if (Math.abs(-gamepad1.right_stick_y) > .2) {
             rf.setPower(-gamepad1.right_stick_y * 1);
@@ -102,6 +102,35 @@ public class TeleOpDriving extends OpMode {
                 armMotor.setPower(-1);
             } else {
                 armMotor.setPower(0);
+            }
+
+            //Drone launcher
+            //if (gamepad2.right_bumper) {
+               //airLauncher.setPower(1);
+            //} else {
+                //airLauncher.setPower(0);
+            //}*/
+
+            //Claw servos
+            if (gamepad2.dpad_down) {
+                airLauncher.setPower(1);
+            } else {
+                airLauncher.setPower(0);
+            }
+
+            if (gamepad2.dpad_right) {
+                claw.setPower(1);
+                telemetry.addData("Claw Power", claw.getPower());
+            } else {
+                claw.setPower(0);
+            }
+
+            //pixel dropper
+            if (gamepad2.a) {
+                pixelP.setPosition(1);
+                telemetry.addData("PixelP", pixelP.getPosition());
+            } else {
+                pixelP.setPosition(0);
             }
         }
     }
