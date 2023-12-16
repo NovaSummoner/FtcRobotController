@@ -93,38 +93,19 @@ public class TeleOpDriving extends OpMode {
             }
 
             //Arm motor
-            if (Math.abs(gamepad2.left_stick_y) > .2) {
-                laArmMotor.setPower(1);
-            } else {
-                laArmMotor.setPower(0);
-            }
-            if (Math.abs(-gamepad2.left_stick_y) > .2) {
+            if (Math.abs(gamepad2.left_trigger) > .2) {
                 laArmMotor.setPower(-1);
+            } else if (Math.abs(gamepad2.right_trigger) > .2) {
+                laArmMotor.setPower(1);
             } else {
                 laArmMotor.setPower(0);
             }
 
             //Hanging motor/mechanism
-            if (Math.abs(-gamepad2.right_stick_y) > .2) {
-                hangMotor.setPower(-.8);
-            } else {
-                hangMotor.setPower(0);
-            }
-
             if (Math.abs(gamepad2.right_stick_y) > .2) {
-                hangMotor.setPower(.8);
-            } else {
-                hangMotor.setPower(0);
-            }
-
-            if (Math.abs(gamepad2.left_trigger) > .2) {
-                laArmMotor.setPower(-.3);
-            } else {
-                laArmMotor.setPower(0);
-            }
-
-            if (Math.abs(gamepad2.right_trigger) > .2) {
-                hangMotor.setPower(-.3);
+                hangMotor.setPower(1);
+            } else if (Math.abs(gamepad2.left_stick_y) > .2) {
+                hangMotor.setPower(-1);
             } else {
                 hangMotor.setPower(0);
             }
