@@ -17,8 +17,8 @@ import java.util.List;
 
 public class RedContourPipeline extends OpenCvPipeline {
     Scalar Titan_Red = new Scalar (196, 23, 112);
-    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 200.0, 0.0);
-    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 128.0);
+    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 190.0, 0.0);
+    public static Scalar scalarUpperYCrCb = new Scalar(245.0, 245.0, 128.0);
     public volatile boolean error = false;
     public volatile Exception debug;
     private double borderLeftX = 0.0;

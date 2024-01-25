@@ -1,21 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.teamcode.PIDF_Arm.d;
-import static org.firstinspires.ftc.teamcode.PIDF_Arm.f;
-import static org.firstinspires.ftc.teamcode.PIDF_Arm.i;
-import static org.firstinspires.ftc.teamcode.PIDF_Arm.p;
-import static org.firstinspires.ftc.teamcode.PIDF_Arm.target;
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,8 +13,7 @@ import org.opencv.core.Scalar;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-@Config
-@TeleOp
+@Autonomous
 public class RedEasyOpenCv extends LinearOpMode {
     DcMotor right_front, right_back, left_front, left_back;
     BNO055IMU imu;
@@ -44,29 +32,12 @@ public class RedEasyOpenCv extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 200.0, 0.0);
-    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 128.0);
-    private PIDController controller;
-    private DcMotorEx arm_motor;
-    private final double ticks_in_degrees = 2786.2 / 180.0;
-    private static int armTarget = 0;
-    private long encoderDriveStartTime = 0;
+    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 195.0, 0.0);
+    public static Scalar scalarUpperYCrCb = new Scalar(243.25, 243.25, 120.0);
     @Override
     public void runOpMode() throws InterruptedException {
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imu.initialize(parameters);
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "camera"), cameraMonitorViewId);
-
-        controller = new PIDController(p, i, d);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
-        arm_motor = hardwareMap.get(DcMotorEx.class, "arm_motor");
 
         pipeline = new RedContourPipeline(0.0, 0.0, 0.0, 0.0);
 
@@ -134,41 +105,26 @@ public class RedEasyOpenCv extends LinearOpMode {
             telemetry.addData("Rectangle Area", rectangleArea);
             telemetry.addData("XY: ",  pipeline.getRectMidpointXY());
 
-            int armPos = arm_motor.getCurrentPosition();
-            double pid = controller.calculate(armPos, armTarget);
-            double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
-            double power = pid + ff;
-            arm_motor.setPower(power);
+            if(rectangleArea > minRectangleArea) {
 
-            if(rectangleArea > minRectangleArea){
-
-                if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
-                    encoderDriveStartTime = System.currentTimeMillis() + 2000;
+                if (pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH) {
                     telemetry.addData("Barcode Position", "Right");
-                    if (encoderDriveStartTime > 0 && System.currentTimeMillis() >= encoderDriveStartTime) {
-                        encoderDrive(0.2,10,10,3);
-                        }
-                    encoderDriveStartTime = 0;
-                    }
-                }
-                else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
-                encoderDriveStartTime = System.currentTimeMillis() + 2000;
-                telemetry.addData("Barcode Position", "Left");
-                    if (encoderDriveStartTime > 0 && System.currentTimeMillis() >= encoderDriveStartTime) {
-                    encoderDrive(0.2,10,10,3);
-                    }
-                encoderDriveStartTime = 0;
-
-            }
-                else {
-                encoderDriveStartTime = System.currentTimeMillis() + 2000;
-                telemetry.addData("Barcode Position", "Center");
-                    if (encoderDriveStartTime > 0 && System.currentTimeMillis() >= encoderDriveStartTime) {
-                    encoderDrive(0.2,10,10,3);
-                    }
-                encoderDriveStartTime = 0;
+                    encoderDrive(0.2, 5, 5, 3);
+                    encoderDrive(0.2, 6.5, -6.5, 3);
+                    encoderDrive(0.2, 4.5, 4.5, 3);
+                    encoderDrive(0.2,20,20,5);
+                } else if (pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH) {
+                    telemetry.addData("Barcode Position", "Left");
+                    encoderDrive(0.2, 5, 5, 3);
+                    encoderDrive(0.2, -6.5, 6.5, 3);
+                    encoderDrive(0.2, 3, 3, 3);
+                    encoderDrive(0.2,-13, 13, 3);
+                } else {
+                    telemetry.addData("Barcode Position", "Center");
+                    encoderDrive(0.2,7,7,3);
                 }
             }
+        }
         telemetry.update();
         }
     public double inValues(double value, double min, double max){
@@ -230,67 +186,6 @@ public class RedEasyOpenCv extends LinearOpMode {
             right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             sleep(250);
-
         }
     }
-    public void encoderDriveStrafe(double speed, double leftInches, double rightInches, double timeoutS) {
-        int newFrontLeftTarget;
-        int newBackLeftTarget;
-        int newFrontRightTarget;
-        int newBackRightTarget;
-
-        if (opModeIsActive()) {
-            left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            newFrontLeftTarget = left_front.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
-            newBackLeftTarget = left_back.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newFrontRightTarget = right_front.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            newBackRightTarget = right_back.getCurrentPosition() - (int) (rightInches * COUNTS_PER_INCH);
-            left_front.setTargetPosition(newFrontLeftTarget);
-            left_back.setTargetPosition(newBackLeftTarget);
-            right_front.setTargetPosition(newFrontRightTarget);
-            right_back.setTargetPosition(newBackRightTarget);
-
-            left_front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            left_back.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            right_front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            right_back.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            left_front.setPower(Math.abs(-speed));
-            left_back.setPower(Math.abs(speed));
-            right_front.setPower(Math.abs(speed));
-            right_back.setPower(Math.abs(-speed));
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (left_front.isBusy() && right_front.isBusy() && left_back.isBusy() && right_back.isBusy())) {
-
-                telemetry.addData("Path1", "Running to %7d :%7d : %7d: %7d ", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d : %7d: %7d ",
-                        left_front.getCurrentPosition(),
-                        left_back.getCurrentPosition(),
-                        right_front.getCurrentPosition(),
-                        right_back.getCurrentPosition());
-                telemetry.update();
-            }
-
-            left_front.setPower(0);
-            left_back.setPower(0);
-            right_front.setPower(0);
-            right_back.setPower(0);
-
-            left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            left_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(250);
-
-        }
-    }
-    private double getZAngle() {return (-imu.getAngularOrientation().firstAngle);
-    }
-
 }

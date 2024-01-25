@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlueContourPipeline extends OpenCvPipeline {
-    Scalar Titan_Blue = new Scalar (13, 71, 161);
-    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 0.0, 200.0);
-    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 128.0, 255.0);
+    Scalar Titan_Blue = new Scalar (0.0, 0.0, 155.0);
+    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 0.0, 155.0);
+    public static Scalar scalarUpperYCrCb = new Scalar(205, 100, 205);
     public volatile boolean error = false;
     public volatile Exception debug;
     private double borderLeftX = 0.0;
@@ -71,7 +71,7 @@ public class BlueContourPipeline extends OpenCvPipeline {
             Imgproc.GaussianBlur(processed, processed, new Size(5.0, 15.0), 0.00);
             List<MatOfPoint> contours = new ArrayList<>();
             Imgproc.findContours(processed, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-            Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0));
+            Imgproc.drawContours(input, contours, -1, new Scalar(0, 0, 200));
             synchronized (sync) {
                 for (MatOfPoint contour : contours) {
                     Point[] contourArray = contour.toArray();
