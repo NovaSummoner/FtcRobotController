@@ -16,7 +16,7 @@ public class AutoTest extends LinearOpMode {
         right_front = hardwareMap.dcMotor.get("rf");
         left_back = hardwareMap.dcMotor.get("lb");
         right_back = hardwareMap.dcMotor.get("rb");
-        pixelP = hardwareMap.servo.get("pixelP");
+        pixelP = hardwareMap.servo.get("pixelPlacer");
 
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);

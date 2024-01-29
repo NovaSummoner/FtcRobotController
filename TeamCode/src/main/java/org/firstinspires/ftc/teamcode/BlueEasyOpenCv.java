@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -15,6 +16,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class BlueEasyOpenCv extends LinearOpMode {
     DcMotor lf, lb, rf, rb;
+    Servo pixelPlacer;
 
     static final double COUNTS_PER_MOTOR_REV = 537.7;
     static final double DRIVE_GEAR_REDUCTION = 1;
@@ -51,6 +53,7 @@ public class BlueEasyOpenCv extends LinearOpMode {
         rf = hardwareMap.dcMotor.get("rf");
         lb = hardwareMap.dcMotor.get("lb");
         rb = hardwareMap.dcMotor.get("rb");
+        pixelPlacer = hardwareMap.servo.get("pixelPlacer");
 
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -111,23 +114,32 @@ public class BlueEasyOpenCv extends LinearOpMode {
 
                 if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Right");
-                    encoderDrive(0.2, 4.5, 4.5, 3);
-                    encoderDrive(0.2, 6.2, -6.5, 3);
-                    encoderDrive(0.2, 3, 3, 3);
-                    sleep(2000);
-                    encoderDrive(0.2,-11.5, 11.7, 3);
-                    encoderDrive(0.2,12,12,3);
+                    encoderDrive(0.2, 4.3, 4.3, 3);
+                    encoderDrive(0.2, -6.3, 6.3, 3);
+                    encoderDrive(0.2,0.5,0.5,3);
+                    sleep(1000);
+                    pixelPlacer.setPosition(1);
+                    sleep(1000);
+                    pixelPlacer.setPosition(0.6);
                 }
                 else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Left");
                     encoderDrive(0.2, 4.3, 4.3, 3);
                     encoderDrive(0.2, -6.3, 6.5, 3);
                     encoderDrive(0.2, 3, 3, 3);
+                    sleep(1000);
+                    pixelPlacer.setPosition(1);
+                    sleep(1000);
+                    pixelPlacer.setPosition(0.6);
                     encoderDrive(0.2,12,12,3);
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
-                    encoderDrive(0.2,7,7,3);
+                    encoderDrive(0.2,7.8,7.8,3);
+                    sleep(1000);
+                    pixelPlacer.setPosition(1);
+                    sleep(1000);
+                    pixelPlacer.setPosition(0.6);
                 }
             }
             telemetry.update();
