@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AutoTest extends LinearOpMode {
     DcMotor right_front, right_back, left_front, left_back;
     Servo pixelP;
+    Servo backboardPlacer;
     @Override
     public void runOpMode() throws InterruptedException {
         left_front = hardwareMap.dcMotor.get("lf");
@@ -17,6 +18,7 @@ public class AutoTest extends LinearOpMode {
         left_back = hardwareMap.dcMotor.get("lb");
         right_back = hardwareMap.dcMotor.get("rb");
         pixelP = hardwareMap.servo.get("pixelPlacer");
+        backboardPlacer = hardwareMap.servo.get("bPlacer");
 
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -28,7 +30,7 @@ public class AutoTest extends LinearOpMode {
 
         waitForStart();
 
-        pixelP.setPosition(0.5);
+        backboardPlacer.setPosition(0.35);
         sleep(30000);
     }
 }
