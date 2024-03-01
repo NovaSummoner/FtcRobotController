@@ -24,7 +24,7 @@ public class BlueEasyOpenCv extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 3.77953;
 
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double WEBCAM_WIDTH = 640;
+    static final double WEBCAM_WIDTH = 864;
     private OpenCvCamera webcam;
     private BlueContourPipeline pipeline;
 
@@ -36,7 +36,7 @@ public class BlueEasyOpenCv extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 0.0, 160.0);
+    public static Scalar scalarLowerYCrCb = new Scalar(0, 0, 160);
     public static Scalar scalarUpperYCrCb = new Scalar(205, 100, 205);
     private double i = 0;
 
@@ -94,7 +94,7 @@ public class BlueEasyOpenCv extends LinearOpMode {
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(864, 480, OpenCvCameraRotation.UPRIGHT);
             }
             @Override
             public void onError(int errorCode) {
@@ -117,6 +117,7 @@ public class BlueEasyOpenCv extends LinearOpMode {
 
                 if (i == 0) {
                     if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
+                        telemetry.addData("Barcode Position", "Right");
                         i++;
                         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
                             @Override
@@ -127,16 +128,18 @@ public class BlueEasyOpenCv extends LinearOpMode {
                             public void onError(int errorCode) {
                             }
                         });
-                        telemetry.addData("Barcode Position", "Right");
-                        encoderDrive(0.2, 4.3, 4.3, 3);
-                        encoderDrive(0.2, -6.3, 6.3, 3);
-                        encoderDrive(0.2,0.5,0.5,3);
+                        encoderDrive(0.2, 4.3, 6, 3);
+                        encoderDrive(0.15, -6.45, 6.6, 5);
+                        encoderDrive(0.2,1,1,3);
                         sleep(1000);
                         pixelPlacer.setPosition(1);
                         sleep(2000);
                         pixelPlacer.setPosition(0.6);
+                        encoderDriveStrafe(0.2,-5.5,-5.5,3);
+                        encoderDrive(0.2,10,10,3);
                     }
                     else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
+                        telemetry.addData("Barcode Position", "Left");
                         i++;
                         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
                             @Override
@@ -147,17 +150,17 @@ public class BlueEasyOpenCv extends LinearOpMode {
                             public void onError(int errorCode) {
                             }
                         });
-                        telemetry.addData("Barcode Position", "Left");
                         encoderDrive(0.2, 4.3, 4.3, 3);
-                        encoderDrive(0.2, -6.3, 6.5, 3);
-                        encoderDrive(0.2, 3, 3, 3);
+                        encoderDrive(0.15, 6.6, -6.45, 5);
+                        encoderDrive(0.2, 1, 1, 3);
                         sleep(1000);
                         pixelPlacer.setPosition(1);
                         sleep(2000);
                         pixelPlacer.setPosition(0.6);
-                        encoderDrive(0.2,12,12,3);
+                        encoderDriveStrafe(0.2,6,6,3);
                     }
                     else {
+                        telemetry.addData("Barcode Position", "Center");
                         i++;
                         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
                             @Override
@@ -168,18 +171,17 @@ public class BlueEasyOpenCv extends LinearOpMode {
                             public void onError(int errorCode) {
                             }
                         });
-                        telemetry.addData("Barcode Position", "Center");
-                        encoderDrive(0.2,7.8,7.8,3);
+                        encoderDrive(0.3,-34.4,30.4,3);
                         sleep(1000);
                         pixelPlacer.setPosition(1);
                         sleep(2000);
                         pixelPlacer.setPosition(0.6);
                         encoderDrive(0.2,1.5,1.5,3);
                         encoderDriveStrafe(0.2,23,23,3);
-                        encoderDrive(0.2,-6,-6,3);
-                        encoderDrive(0.2,6.5,-6.5,3);
-                        encoderDrive(0.2,-1,-1,3);
-                        backboardPlacer.setPosition(0.35);
+                        encoderDrive(0.2,-5.5,-5.5,3);
+                        encoderDrive(0.2, 6.5, -6.3, 3);
+                        encoderDrive(0.2,-1.5,-1.5,3);
+                        backboardPlacer.setPosition(0.275);
                         sleep(2000);
                         backboardPlacer.setPosition(0);
                     }
@@ -197,8 +199,8 @@ public class BlueEasyOpenCv extends LinearOpMode {
                 }
             }
             telemetry.update();
-            }
         }
+    }
 
 
     public double inValues(double value, double min, double max){

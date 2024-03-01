@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -15,15 +15,16 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class RedEasyOpenCv extends LinearOpMode {
-    DcMotor right_front, right_back, left_front, left_back;
-    BNO055IMU imu;
+    DcMotor lb, rb, lf, rf;
+    Servo pixelPlacer;
+    Servo backboardPlacer;
     static final double COUNTS_PER_MOTOR_REV = 537.7;
     static final double DRIVE_GEAR_REDUCTION = 1;
     static final double WHEEL_DIAMETER_INCHES = 3.77953;
 
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    static final double WEBCAM_WIDTH = 640;
+    static final double WEBCAM_WIDTH = 864;
     private OpenCvCamera webcam;
     private RedContourPipeline pipeline;
     private int minRectangleArea = 2000;
@@ -32,8 +33,9 @@ public class RedEasyOpenCv extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 195.0, 0.0);
-    public static Scalar scalarUpperYCrCb = new Scalar(243.25, 243.25, 120.0);
+    public static Scalar scalarLowerYCrCb = new Scalar(0, 190, 0);
+    public static Scalar scalarUpperYCrCb = new Scalar(180, 245, 120);
+    private double i = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -44,37 +46,39 @@ public class RedEasyOpenCv extends LinearOpMode {
         pipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
         pipeline.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
 
-        left_front = hardwareMap.dcMotor.get("lf");
-        right_front = hardwareMap.dcMotor.get("rf");
-        left_back = hardwareMap.dcMotor.get("lb");
-        right_back = hardwareMap.dcMotor.get("rb");
+        lf = hardwareMap.dcMotor.get("lf");
+        lb = hardwareMap.dcMotor.get("rf");
+        rf = hardwareMap.dcMotor.get("lb");
+        rb = hardwareMap.dcMotor.get("rb");
+        pixelPlacer = hardwareMap.servo.get("pixelPlacer");
+        backboardPlacer = hardwareMap.servo.get("bPlacer");
 
-        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
+        rf.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        right_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        right_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
-        left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Path0", "Starting at %7d :%7d : %7d: %7d ",
-                left_front.getCurrentPosition(),
-                right_front.getCurrentPosition(),
-                left_back.getCurrentPosition(),
-                right_back.getCurrentPosition());
+                lf.getCurrentPosition(),
+                lb.getCurrentPosition(),
+                rf.getCurrentPosition(),
+                rb.getCurrentPosition());
         telemetry.update();
 
         pipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
@@ -85,7 +89,7 @@ public class RedEasyOpenCv extends LinearOpMode {
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(864, 480, OpenCvCameraRotation.UPRIGHT);
             }
             @Override
             public void onError(int errorCode) {
@@ -106,27 +110,92 @@ public class RedEasyOpenCv extends LinearOpMode {
             telemetry.addData("XY: ",  pipeline.getRectMidpointXY());
 
             if(rectangleArea > minRectangleArea) {
-
-                if (pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH) {
+                if (i == 0) {
+                    if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
+                        telemetry.addData("Barcode Position", "Right");
+                        i++;
+                        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+                            @Override
+                            public void onOpened() {
+                                webcam.stopStreaming();
+                            }
+                            @Override
+                            public void onError(int errorCode) {
+                            }
+                        });
+                        encoderDrive(0.2, 4.3, 4.3, 3);
+                        encoderDrive(0.15, -6.45, 6.6, 5);
+                        encoderDrive(0.2,1,1,3);
+                        sleep(1000);
+                        pixelPlacer.setPosition(1);
+                        sleep(2000);
+                        pixelPlacer.setPosition(0.6);
+                        encoderDriveStrafe(0.2,-5.5,-5.5,3);
+                        encoderDrive(0.2,10,10,3);
+                    }
+                    else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
+                        telemetry.addData("Barcode Position", "Left");
+                        i++;
+                        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+                            @Override
+                            public void onOpened() {
+                                webcam.stopStreaming();
+                            }
+                            @Override
+                            public void onError(int errorCode) {
+                            }
+                        });
+                        encoderDrive(0.2, 4.3, 4.3, 3);
+                        encoderDrive(0.15, 6.6, -6.45, 5);
+                        encoderDrive(0.2, 1, 1, 3);
+                        sleep(1000);
+                        pixelPlacer.setPosition(1);
+                        sleep(2000);
+                        pixelPlacer.setPosition(0.6);
+                        encoderDriveStrafe(0.2,6,6,3);
+                    }
+                    else {
+                        telemetry.addData("Barcode Position", "Center");
+                        i++;
+                        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+                            @Override
+                            public void onOpened() {
+                                webcam.stopStreaming();
+                            }
+                            @Override
+                            public void onError(int errorCode) {
+                            }
+                        });
+                        encoderDrive(0.2,7.4,7.4,3);
+                        sleep(1000);
+                        pixelPlacer.setPosition(1);
+                        sleep(2000);
+                        pixelPlacer.setPosition(0.6);
+                        encoderDrive(0.2,1,1,3);
+                        encoderDriveStrafe(0.2,-23,-23,3);
+                        encoderDrive(0.2,-5.5,-5.5,3);
+                        encoderDrive(0.2, -6.3, 6.5, 3);
+                        encoderDrive(0.2,-1.5,-1.5,3);
+                        backboardPlacer.setPosition(0.275);
+                        sleep(2000);
+                        backboardPlacer.setPosition(0);
+                    }
+                }
+                telemetry.update();
+            } else if (i > 0){
+                if(pipeline.getRectMidpointX() > rightBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Right");
-                    encoderDrive(0.2, 5, 5, 3);
-                    encoderDrive(0.2, 6.5, -6.5, 3);
-                    encoderDrive(0.2, 4.5, 4.5, 3);
-                    encoderDrive(0.2,20,20,5);
-                } else if (pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH) {
+                }
+                else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * WEBCAM_WIDTH){
                     telemetry.addData("Barcode Position", "Left");
-                    encoderDrive(0.2, 5, 5, 3);
-                    encoderDrive(0.2, -6.5, 6.5, 3);
-                    encoderDrive(0.2, 3, 3, 3);
-                    encoderDrive(0.2,-13, 13, 3);
-                } else {
+                }
+                else {
                     telemetry.addData("Barcode Position", "Center");
-                    encoderDrive(0.2,7,7,3);
                 }
             }
         }
         telemetry.update();
-        }
+    }
     public double inValues(double value, double min, double max){
         if(value < min){ value = min; }
         if(value > max){ value = max; }
@@ -139,53 +208,110 @@ public class RedEasyOpenCv extends LinearOpMode {
         int newBackRightTarget;
 
         if (opModeIsActive()) {
-            left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            newFrontLeftTarget = left_front.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newBackLeftTarget = left_back.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newFrontRightTarget = right_front.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            newBackRightTarget = right_back.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newFrontLeftTarget = lf.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newBackLeftTarget = rf.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newFrontRightTarget = lb.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newBackRightTarget = rb.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
 
-            left_front.setTargetPosition(newFrontLeftTarget);
-            left_back.setTargetPosition(newBackLeftTarget);
-            right_front.setTargetPosition(newFrontRightTarget);
-            right_back.setTargetPosition(newBackRightTarget);
+            lf.setTargetPosition(newFrontLeftTarget);
+            rf.setTargetPosition(newBackLeftTarget);
+            lb.setTargetPosition(newFrontRightTarget);
+            rb.setTargetPosition(newBackRightTarget);
 
-            left_front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            left_back.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            right_front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            right_back.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             runtime.reset();
-            left_front.setPower(Math.abs(speed));
-            left_back.setPower(Math.abs(speed));
-            right_front.setPower(Math.abs(speed));
-            right_back.setPower(Math.abs(speed));
+            lf.setPower(Math.abs(speed));
+            rf.setPower(Math.abs(speed));
+            lb.setPower(Math.abs(speed));
+            rb.setPower(Math.abs(speed));
 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (left_front.isBusy() && right_front.isBusy() && left_back.isBusy() && right_back.isBusy())) {
+                    (lf.isBusy() && lb.isBusy() && rf.isBusy() && rb.isBusy())) {
                 telemetry.addData("Path1", "Running to %7d :%7d : %7d: %7d ", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
                 telemetry.addData("Path2", "Running at %7d :%7d : %7d: %7d ",
-                        left_front.getCurrentPosition(),
-                        left_back.getCurrentPosition(),
-                        right_front.getCurrentPosition(),
-                        right_back.getCurrentPosition());
+                        lf.getCurrentPosition(),
+                        rf.getCurrentPosition(),
+                        lb.getCurrentPosition(),
+                        rb.getCurrentPosition());
                 telemetry.update();
             }
-            left_front.setPower(0);
-            left_back.setPower(0);
-            right_front.setPower(0);
-            right_back.setPower(0);
+            lf.setPower(0);
+            rf.setPower(0);
+            lb.setPower(0);
+            rb.setPower(0);
 
-            left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            left_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             sleep(250);
+        }
+    }
+    public void encoderDriveStrafe(double speed, double leftInches, double rightInches, double timeoutS) {
+        int newFrontLeftTarget;
+        int newBackLeftTarget;
+        int newFrontRightTarget;
+        int newBackRightTarget;
+
+        if (opModeIsActive()) {
+            lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            newFrontLeftTarget = lf.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
+            newBackLeftTarget = lb.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newFrontRightTarget = rf.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newBackRightTarget = rb.getCurrentPosition() - (int) (rightInches * COUNTS_PER_INCH);
+            lf.setTargetPosition(newFrontLeftTarget);
+            lb.setTargetPosition(newBackLeftTarget);
+            rf.setTargetPosition(newFrontRightTarget);
+            rb.setTargetPosition(newBackRightTarget);
+
+            lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            runtime.reset();
+            lf.setPower(Math.abs(-speed));
+            lb.setPower(Math.abs(speed));
+            rf.setPower(Math.abs(speed));
+            rb.setPower(Math.abs(-speed));
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (lf.isBusy() && rf.isBusy() && lb.isBusy() && rb.isBusy())) {
+
+                telemetry.addData("Path1", "Running to %7d :%7d : %7d: %7d ", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d : %7d: %7d ",
+                        lf.getCurrentPosition(),
+                        lb.getCurrentPosition(),
+                        rf.getCurrentPosition(),
+                        rb.getCurrentPosition());
+                telemetry.update();
+            }
+
+            lf.setPower(0);
+            lb.setPower(0);
+            rf.setPower(0);
+            rb.setPower(0);
+
+            lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(250);
+
         }
     }
 }

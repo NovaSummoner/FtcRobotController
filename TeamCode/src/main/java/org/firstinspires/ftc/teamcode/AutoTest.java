@@ -30,7 +30,7 @@ public class AutoTest extends LinearOpMode {
 
         waitForStart();
 
-        backboardPlacer.setPosition(0.35);
+        backboardPlacer.setPosition(0.25);
         sleep(30000);
     }
 }
