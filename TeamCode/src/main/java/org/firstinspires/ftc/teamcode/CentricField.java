@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
+import java.util.concurrent.TimeUnit;
 
 @TeleOp
 public class CentricField extends LinearOpMode {
@@ -14,10 +17,10 @@ public class CentricField extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("lf");
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get("lb");
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get("rf");
-        DcMotor backRightMotor = hardwareMap.dcMotor.get("rb");
+        DcMotor leftFront = hardwareMap.dcMotor.get("lf");
+        DcMotor leftBack = hardwareMap.dcMotor.get("lb");
+        DcMotor rightFront = hardwareMap.dcMotor.get("rf");
+        DcMotor rightBack = hardwareMap.dcMotor.get("rb");
 
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
@@ -26,12 +29,14 @@ public class CentricField extends LinearOpMode {
         /*frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 */
+        Deadline gamepadRateLimit = new Deadline(500, TimeUnit.MILLISECONDS);
+
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
-                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
@@ -40,38 +45,27 @@ public class CentricField extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x;
+            double lx = gamepad1.left_stick_x;
+            double ly = gamepad1.left_stick_y;
             double rx = gamepad1.right_stick_x;
 
-            // This button choice was made so that it is hard to hit on accident,
-            // it can be freely changed based on preference.
-            // The equivalent button is start on Xbox-style controllers.
-            if (gamepad1.options) {
+            double max = Math.max(Math.abs(lx) + Math.abs(ly) + Math.abs(rx), 1);
+
+            double drivePower = 0.8 - (0.6 * gamepad1.right_trigger);
+
+            if (gamepadRateLimit.hasExpired() && gamepad1.a) {
                 imu.resetYaw();
+                gamepadRateLimit.reset();
             }
 
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double adjustedLx = -ly * Math.sin(heading) + lx * Math.cos(heading);
+            double adjustedLy = ly * Math.cos(heading) + lx * Math.sin(heading);
 
-            // Rotate the movement direction counter to the bot's rotation
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-            rotX = rotX * 1.1;  // Counteract imperfect strafing
-
-            // Denominator is the largest motor power (absolute value) or 1
-            // This ensures all the powers maintain the same ratio,
-            // but only if at least one is out of the range [-1, 1]
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
-
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
+            leftFront.setPower(((adjustedLy + adjustedLx + rx) / max) * drivePower);
+            leftBack.setPower(((adjustedLy - adjustedLx + rx) / max) * drivePower);
+            rightFront.setPower(((adjustedLy - adjustedLx - rx) / max) * drivePower);
+            rightBack.setPower(((adjustedLy + adjustedLx - rx) / max) * drivePower);
         }
     }
 }
